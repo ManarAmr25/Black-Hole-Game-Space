@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1920</width>
+    <height>1020</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>OCR A Extended</family>
+   </font>
+  </property>
+  <property name="mouseTracking">
+   <bool>true</bool>
+  </property>
+  <property name="windowTitle">
+   <string>profile</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icons8-space-64.png</normaloff>icons8-space-64.png</iconset>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>40</y>
+     <width>631</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>OCR A Extended</family>
+     <pointsize>36</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-left: 10px solid  rgb(255, 255, 255);
+background-color: rgba(184, 228, 240,0.3);
+color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="text">
+    <string>Player's Profile</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>220</y>
+     <width>251</width>
+     <height>261</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>251</width>
+     <height>231</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-radius: 7px;
+background-color: rgba(0, 0, 49,0.6);
+border : 2px groove rgb(157, 158, 253);
+</string>
+   </property>
+   <property name="text">
+    <string>profile image</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="margin">
+    <number>5</number>
+   </property>
+   <property name="indent">
+    <number>5</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1920</width>
+     <height>1050</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="resources.qrc">:/newPrefix/WhatsApp Image 2021-12-14 at 10.00.04 PM.jpeg</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>250</y>
+     <width>251</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>OCR A Extended</family>
+     <pointsize>22</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);
+border-left: 5px solid  rgb(255, 255, 255);
+border-radius : 10px;
+</string>
+   </property>
+   <property name="text">
+    <string>User Name:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>510</y>
+     <width>291</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>OCR A Extended</family>
+     <pointsize>11</pointsize>
+     <weight>62</weight>
+     <italic>false</italic>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+	color:rgb(248, 255, 105);
+	font: 11pt &quot;OCR A Extended&quot;;
+	border-radius: 1px;
+	border-bottom: 4px solid rgba(152, 186, 231,0);
+	font-weight: 500;
+}
+
+QPushButton:hover{
+	color: rgb(9, 6, 75);
+	background-color: rgba(152, 186, 231,0.7);
+	border-bottom: 4px solid rgb(152, 186, 231);
+	font: 11pt &quot;OCR A Extended&quot;;
+	box-sizing: border-box;
+	font-weight: 500;
+}</string>
+   </property>
+   <property name="text">
+    <string>Change Profile Picture</string>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+   <property name="default">
+    <bool>false</bool>
+   </property>
+   <property name="flat">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>410</y>
+     <width>201</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>OCR A Extended</family>
+     <pointsize>22</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);
+border-left: 5px solid  rgb(255, 255, 255);
+border-radius : 10px;
+</string>
+   </property>
+   <property name="text">
+    <string>Stats:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>240</y>
+     <width>341</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>OCR A Extended</family>
+     <pointsize>20</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLineEdit{
+	color: rgb(255, 255, 255);
+	background-color: rgba(230, 230, 230,0) ;
+	font: 20pt &quot;OCR A Extended&quot;;
+	border-radius: 1px;
+	border-bottom: 5px solid rgba(255,255,255,0);
+}
+
+QLineEdit:focus{
+	background-color: rgba(230, 230, 230,0.6) ;
+	border-bottom: 5px solid rgba(255,255,255,1);
+}
+</string>
+   </property>
+   <property name="inputMask">
+    <string/>
+   </property>
+   <property name="text">
+    <string>Player's name</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_2">
+   <property name="geometry">
+    <rect>
+     <x>1020</x>
+     <y>250</y>
+     <width>71</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>OCR A Extended</family>
+     <pointsize>11</pointsize>
+     <weight>62</weight>
+     <italic>false</italic>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+	color:rgb(248, 255, 105);
+	font: 11pt &quot;OCR A Extended&quot;;
+	border-radius: 1px;
+	border-bottom: 4px solid rgba(152, 186, 231,0);
+	font-weight: 500;
+}
+
+QPushButton:hover{
+	color: rgb(9, 18, 97);
+	background-color: rgba(152, 186, 231,0.7);
+	border-bottom: 4px solid rgb(152, 186, 231);
+	font: 11pt &quot;OCR A Extended&quot;;
+	box-sizing: border-box;
+	font-weight: 500;
+}</string>
+   </property>
+   <property name="text">
+    <string>Edit</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>1130</x>
+     <y>250</y>
+     <width>260</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>62</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 69, 72);
+font-weight: 500;
+font-size: 10pt;</string>
+   </property>
+   <property name="text">
+    <string>User Name already exists</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_3">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>340</y>
+     <width>191</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+	color:rgb(248, 255, 105);
+	font: 11pt &quot;OCR A Extended&quot;;
+	border-radius: 1px;
+	border-bottom: 4px solid rgba(152, 186, 231,0);
+	font-weight: 500;
+}
+
+QPushButton:hover{
+	color: rgb(9, 6, 75);
+	background-color: rgba(152, 186, 231,0.7);
+	border-bottom: 4px solid rgb(152, 186, 231);
+	font: 11pt &quot;OCR A Extended&quot;;
+	box-sizing: border-box;
+	font-weight: 500;
+}</string>
+   </property>
+   <property name="text">
+    <string>Change password</string>
+   </property>
+  </widget>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>480</y>
+     <width>721</width>
+     <height>341</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-left : 7px solid rgb(255, 255, 255);
+background-color : rgba(184, 228, 240,0.3); </string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>OCR A Extended</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);
+border : none;</string>
+    </property>
+    <property name="text">
+     <string> number of wins : </string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="pushButton_4">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>910</y>
+     <width>80</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+	border-radius : 40px;
+	background-color: rgba(152, 186, 231,0.7);
+}
+
+QPushButton:hover{
+	background-color: rgb(152, 186, 231);
+}</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../space/icons/icons8-space-shuttle-50.png</normaloff>../space/icons/icons8-space-shuttle-50.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <zorder>label_4</zorder>
+  <zorder>label</zorder>
+  <zorder>label_2</zorder>
+  <zorder>label_5</zorder>
+  <zorder>pushButton</zorder>
+  <zorder>label_7</zorder>
+  <zorder>lineEdit</zorder>
+  <zorder>pushButton_2</zorder>
+  <zorder>label_6</zorder>
+  <zorder>pushButton_3</zorder>
+  <zorder>frame</zorder>
+  <zorder>pushButton_4</zorder>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>lineEdit</receiver>
+   <slot>showNormal()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>906</x>
+     <y>283</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>685</x>
+     <y>285</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
