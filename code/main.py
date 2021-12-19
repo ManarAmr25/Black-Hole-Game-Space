@@ -1,16 +1,21 @@
-# This is a sample Python script.
+from models import player, stats
+from database import db_manager
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# player test
+'''p = player.Player("Momo")
+print(p.get_name())
+print(p.get_level())
+p.increase_xp(0)
+print(p.get_level())
+'''
 
+db = db_manager.DBManager()
+print(db.connect())
+print(db.get_quote())
+print(db.get_quote())
+print(db.get_player("GameAd"))
+print(db.get_player("Game"))
+#print(db.add_quote("Time is the mind of space"))
+print(db.get_quote())
+print(db.add_player("test_player", "123456789", True))
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
