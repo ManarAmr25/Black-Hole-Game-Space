@@ -18,7 +18,7 @@ CREATE TABLE user_info(
     daily_ch BIGINT NOT NULL DEFAULT 0
 );
 
-INSERT INTO user_info(name, password) VALUES("GameAd","password");
+INSERT INTO user_info(name, password, salt) VALUES("GameAd","password", "salt");
 
 CREATE TABLE quotes(
     id INT PRIMARY KEY AUTO_INCREMENT,
