@@ -40,14 +40,14 @@ class DBManager:
     __secret_token = "6390ed339b8270b"
 
     def __init__(self, token):
-        if self.__instance is not None:
+        if DBManager.__instance is not None:
             raise Exception("Can't create another instance")
 
         if token == self.__secret_token:
             self.__connection = None
             self.__cursor = None
-            __instance = self  # static private variable
-            if not self.connect():
+            DBManager.__instance = self  # static private variable
+            if not self.__connect():
                 raise Exception("Failed to establish connection")
         else:
             raise Exception("Unauthenticated access to database")
@@ -58,7 +58,9 @@ class DBManager:
             if DBManager.__instance is not None:
                 return DBManager.__instance
             else:
-                return DBManager()
+                return DBManager(token)
+        else:
+            raise Exception("Unauthenticated access to database")
 
     def __connect(self):
         try:
@@ -77,10 +79,14 @@ class DBManager:
             print(e)
             return False
 
-    #TODO close connection
+    def close(self):
+        self.__connection.close()
+        """self.__connection = None
+        self.__cursor = None
+        DBManager.__instance = None"""
 
     def get_quote(self):
-        def_q = "Welcome Alien"
+        def_q = "Welcome Alien"  # default
         try:
             self.__cursor.execute("SELECT quote FROM quotes ORDER BY RAND() LIMIT 1")
             res = self.__cursor.fetchall()
@@ -93,6 +99,8 @@ class DBManager:
             return def_q
 
     def add_quote(self, q):
+        if not isinstance(q,str) or len(q) == 0:
+            return False
         try:
             self.__cursor.execute(f"INSERT INTO quotes(quote) VALUES('{str(q)}')")
             self.__connection.commit()
@@ -103,6 +111,8 @@ class DBManager:
 
     # for sign up
     def check_name(self, user_name):
+        if not isinstance(user_name,str) or len(user_name) == 0:
+            return False
         try:
             self.__cursor.execute(f"SELECT name FROM user_info WHERE name = '{str(user_name)}'")
             res = self.__cursor.fetchall()
@@ -116,6 +126,8 @@ class DBManager:
 
     # for sign in & profile > returns pair of empty strings if user_name isn't found
     def get_password(self, user_name):
+        if not isinstance(user_name,str) or len(user_name) == 0:
+            return False
         try:
             self.__cursor.execute(f"SELECT password, salt FROM user_info WHERE name = '{str(user_name)}'")
             res = self.__cursor.fetchall()
@@ -129,6 +141,8 @@ class DBManager:
 
     # used after authentication
     def get_player(self, user_name):
+        if not isinstance(user_name,str) or len(user_name) == 0:
+            return False
         try:
             self.__cursor.execute(f"SELECT * FROM user_info WHERE name = '{str(user_name)}'")
             res = self.__cursor.fetchall()
@@ -156,10 +170,9 @@ class DBManager:
 
     # add new player in sign up
     def add_player(self, user_name, password, salt, gender=False):
-        if gender:
-            gender = 1
-        else:
-            gender = 0
+        if not isinstance(user_name,str) or len(user_name) == 0 or not isinstance(password,str) or len(password) == 0 or not isinstance(salt,str) or len(salt) == 0 or not isinstance(gender,bool):
+            return False
+        gender = 1 if gender else 0
 
         try:
             self.__cursor.execute(
@@ -178,6 +191,9 @@ class DBManager:
 
     # update progress, not name and password
     def update_player(self, player):
+        if not isinstance(player, Player) or player is None:
+            return False
+
         if player.get_gender():
             gender = 1
         else:
@@ -193,6 +209,8 @@ class DBManager:
 
     # update name in profile
     def update_name(self, old_name, new_name):
+        if not isinstance(old_name, str) or len(old_name) == 0 or not isinstance(new_name,str) or len(new_name) == 0:
+            return False
         try:
             self.__cursor.execute(f"UPDATE user_info SET name = '{str(new_name)}' WHERE name = '{str(old_name)}'")
             return True
@@ -202,6 +220,8 @@ class DBManager:
 
     # update password in profile
     def update_password(self, name, old_password, new_password):
+        if not isinstance(name,str) or len(name) == 0 or not isinstance(old_password,str) or len(old_password) == 0 or not isinstance(new_password,str) or len(new_password) == 0:
+            return False
         try:
             self.__cursor.execute(
                 f"UPDATE user_info SET password = '{str(new_password)}' WHERE name = '{str(name)}' AND password = '{str(old_password)}'")
