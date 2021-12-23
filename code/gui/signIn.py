@@ -1,17 +1,29 @@
 import sys
 import time
-
 from PyQt5 import QtCore, QtWidgets
 from PyQt5 import QtGui
 from PyQt5.QtCore import QUrl, QSize
 from PyQt5.QtGui import QMovie, QPainter
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QProgressBar, QLabel
+from gamespace import GamespaceMain
+from start_page import StartMain
 
 
-class UIWindow(QWidget):
+class SigninWindow(QWidget):
+
+    def open_gamespace(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = GamespaceMain()
+        w.hide()
+
+    def open_startpage(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = StartMain()
+        w.hide()
+
     def __init__(self, parent=None):
-        super(UIWindow, self).__init__(parent)
+        super(SigninWindow, self).__init__(parent)
         self.setObjectName("Form")
         self.resize(1938, 1043)
         font = QtGui.QFont()
@@ -104,9 +116,9 @@ class UIWindow(QWidget):
                                       "")
         self.pushButton.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("D:/CSED/Third Year/First Semester/SE/project/space/space/icons/icons8-space"
-                                      "-shuttle-50.png"), QtGui.QIcon.Normal,
+        icon1.addPixmap(QtGui.QPixmap("../storage/Icons/back.png"), QtGui.QIcon.Normal,
                         QtGui.QIcon.Off)
+        self.icon1.clicked.connect(self.open_startpage())
         self.pushButton.setIcon(icon1)
         self.pushButton.setIconSize(QtCore.QSize(80, 80))
         self.pushButton.setObjectName("pushButton")
@@ -119,7 +131,7 @@ class UIWindow(QWidget):
         self.pushButton_2.setText("")
         icon2 = QtGui.QIcon()
         icon2.addPixmap(
-            QtGui.QPixmap("D:/CSED/Third Year/First Semester/SE/project/space/space/icons/icons8-millenium-eye-64.png"),
+            QtGui.QPixmap("../storage/Icons/showPassword.png"),
             QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_2.setIcon(icon2)
         self.pushButton_2.setIconSize(QtCore.QSize(50, 50))
@@ -150,11 +162,13 @@ class UIWindow(QWidget):
                                         "}")
         icon3 = QtGui.QIcon()
         icon3.addPixmap(
-            QtGui.QPixmap("D:/CSED/Third Year/First Semester/SE/project/space/space/icons/icons8-space-32.png"),
+            QtGui.QPixmap("../storage/Icons/nextPage.png"),
             QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_3.setIcon(icon3)
         self.pushButton_3.setIconSize(QtCore.QSize(100, 100))
         self.pushButton_3.setObjectName("pushButton_3")
+       #TODO
+       # self.pushButton_3.clicked.connect(self.open_gamespace)
         self.label_4.raise_()
         self.label.raise_()
         self.label_2.raise_()
@@ -179,18 +193,18 @@ class UIWindow(QWidget):
         self.pushButton_3.setText(_translate("Form", "Let\'s GO"))
 
 
-class MainWindow(QMainWindow):
+class SigninMain(QMainWindow):
     def __init__(self, parent=None):
-        super(MainWindow, self).__init__(parent)
+        super(SigninMain, self).__init__(parent)
         self.setGeometry(50, 50, 600, 750)
-        self.setFixedSize(1579, 891)
+        self.setFixedSize(1920, 1080)
         self.startUIWindow()
-        self.movie = QMovie("f.JPG")
+        self.movie = QMovie("../storage/BackGround/user.jpg")
         self.movie.frameChanged.connect(self.repaint)
         self.movie.start()
 
     def startUIWindow(self):
-        self.Window = UIWindow(self)
+        self.Window = SigninWindow(self)
         self.setWindowTitle("My Program")
         self.show()
 
@@ -205,5 +219,5 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    w = MainWindow()
+    w = SigninMain()
     sys.exit(app.exec_())
