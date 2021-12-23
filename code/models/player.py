@@ -40,6 +40,21 @@ class Player(guest.Guest):
         self.__games = 0
         self.__daily_challenges = 0
 
+    @staticmethod
+    def build_player(name, gender=False, avatar=None, lvl=1, xp=0, weekly_xp=0, wins=0, games=0, daily_challenges=0):
+        """Build a player with the given parameters. returns none if there are invalid parameters."""
+        is_successful = True
+        player = Player()
+        is_successful &= player.set_name(name)
+        is_successful &= player.set_gender(gender)
+        is_successful &= player.set_avatar(avatar)
+        is_successful &= player.set_level_xp(lvl, xp)
+        is_successful &= player.set_weekly_xp(weekly_xp)
+        is_successful &= player.set_wins(wins)
+        is_successful &= player.set_games(games)
+        is_successful &= player.set_daily_challenges(daily_challenges)
+        return player if is_successful else None
+
     def set_name(self, name):
         """
         Sets Player's name, default = "No name"
@@ -50,7 +65,6 @@ class Player(guest.Guest):
         else:
             return False
 
-    # TODO : check if path exists ?
     def set_avatar(self, avatar):
         """
         Sets Player's avatar image, default = None.

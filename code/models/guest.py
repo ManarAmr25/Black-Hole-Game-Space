@@ -44,6 +44,16 @@ class Guest:
         self.__xp = 0
         self.__max_lvl_xp = 50
 
+    @staticmethod
+    def build_player(name, gender=False, avatar=None, lvl=1, xp=0, weekly_xp=0, wins=0, games=0, daily_challenges=0):
+        """Build a guest player with the given parameters. returns none if there are invalid parameters."""
+        is_successful = True
+        guest = Guest()
+        is_successful &= guest.set_name(name)
+        is_successful &= guest.set_avatar(avatar)
+        is_successful &= guest.set_level_xp(lvl, xp)
+        return guest if is_successful else None
+
     def set_level_xp(self, level, xp):  # level and xp have to be set together
         """
         Sets Player's level and xp, default level = 1, default xp = 0.
@@ -85,7 +95,7 @@ class Guest:
             self.__xp -= self.__max_lvl_xp
             self.__lvl += 1  # increment level
             self.__max_lvl_xp = 25 * self.__lvl * (1 + self.__lvl)  # update level maximum xp level
-            # self.__max_int_lvl_xp = floor(self.__max_lvl_xp)
 
     def xp_to_complete(self):
+        """Returns remaining xp to complete the level."""
         return self.__max_lvl_xp - self.__xp

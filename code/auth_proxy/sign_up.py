@@ -1,7 +1,7 @@
 import abc
 from models.player import Player
 from database.db_manager import DBManager
-from models.player_factory import PlayerFactory
+from hashing import *
 
 
 # formal interface
@@ -15,19 +15,30 @@ class SignUpInterface(abc.ABC):
 # class implements the interface
 class SignUp(SignUpInterface):
 
+    __secret_token = "6390ed339b8270b"
+
     def __init__(self):
-        self.db = DBManager()
-        if not self.db.connect():
-            print("Database isn't connected.")
+        try:
+            self.db = DBManager.get_instance(SignUp.__secret_token)
+        except Exception as e:
+            print(e)
 
     def sign_up(self, name, password, gender):
+        """
+        Create new player
+        :param name
+        :param password
+        :param gender
+        :return: true and player object or false and an error message
+        """
         if not self.validate_password(password):
             return False, "Invalid password!"
         elif self.db.check_name(name):
             return False, "Name already exists!"
         else:
-            # TODO : create and get player
-            return True, player
+            salt = generate_salt()
+            password = hash_password(salt, password)
+            return self.db.add_player(name, password, salt, gender)
 
     # check password
     @staticmethod
