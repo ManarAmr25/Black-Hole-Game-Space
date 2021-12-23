@@ -1,5 +1,6 @@
 import abc
-from models.player import Player
+from database.db_manager import DBManager
+from hashing import *
 
 
 class SignInInterface(abc.ABC):
@@ -8,24 +9,19 @@ class SignInInterface(abc.ABC):
 
 
 class SignInClass(SignInInterface):
-    def sign_in(self, username, password):
-        if self.checkName(username)[0]:
-            # if password = resPas -> true
-            res_pas = self.checkName(username)[1]
-            if password == res_pas:
-                player = ""  # get player
-                return True, player  # instance of player
-            else:
-                return False, "Wrong password"
-        else:
-            return False, "player doesn't exist"
 
-    def __check_name(self, username):
-        # password or false
-        # dataBaseclass.methodName(username)
-        # check database if name exists bring password if not return empty string
-        res = "foo"  # password brought from database
-        if res != "":
-            return True, res
+    def __init__(self):
+        self.db = DBManager()
+        if not self.db.connect():
+            print("Database isn't connected.")
+
+    def sign_in(self, username, password):
+        original_pw, salt = self.db.get_password()
+        if len(salt) < 64:
+            return False, "Player doesn't exist!"
         else:
-            return False, ""
+            hashed_password = hash_password(salt, password)
+            if hashed_password != original_pw:
+                return False, "Wrong password!"
+            else:
+                return True # TODO : player

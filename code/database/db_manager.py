@@ -1,6 +1,7 @@
 from aifc import Error
 import mysql.connector
 from models.player import Player
+from models.player_factory import PlayerFactory
 
 
 class DBManager:
@@ -44,6 +45,33 @@ class DBManager:
         except Exception:
             return False
 
+    #for sign up
+    def check_name(self, user_name):
+        try:
+            self.__cursor.execute(f"SELECT name FROM user_info WHERE name = '{str(user_name)}'")
+            res = self.__cursor.fetchall()
+            if len(res) == 0:
+                False
+            # TODO test
+            print(res[0])
+            return True
+        except Exception:
+            return False
+
+    # for sign in & profile > returns pair of empty strings if user_name isn't found
+    def get_password(self, user_name):
+        try:
+            self.__cursor.execute(f"SELECT password, salt FROM user_info WHERE name = '{str(user_name)}'")
+            res = self.__cursor.fetchall()
+            if len(res) == 0:
+                return "", ""
+            # TODO test
+            print(res[0])
+            return res[0]
+        except Exception:
+            return "", ""
+
+    # used after authentication
     def get_player(self, user_name):
         try:
             self.__cursor.execute(f"SELECT * FROM user_info WHERE name = '{str(user_name)}'")
@@ -51,23 +79,26 @@ class DBManager:
             if len(res) == 0:
                 return False
             # TODO create player
+            player = PlayerFactory.get_player("reg")
             return True
         except Exception:
             return None
 
-    def add_player(self, user_name, password, gender=False):
+    # add new player in sign up
+    def add_player(self, user_name, password, salt, gender=False):
         if gender:
             gender = 1
         else:
             gender = 0
 
         try:
-            self.__cursor.execute(f"INSERT INTO user_info(name, password, gender) VALUES('{str(user_name)}', '{str(password)}', {gender})")
+            self.__cursor.execute(f"INSERT INTO user_info(name, password, salt, gender) VALUES('{str(user_name)}', '{str(password)}','{str(salt)}', {gender})")
             self.__connection.commit()
             return True
         except Exception:
             return False
 
+    # update progress, not name and password
     def update_player(self, player):
         if player.get_gender():
             gender = 1

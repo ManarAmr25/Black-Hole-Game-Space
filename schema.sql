@@ -6,7 +6,8 @@ USE BlackHole;
 
 CREATE TABLE user_info(
     name VARCHAR(50) PRIMARY KEY , 
-    password VARCHAR(20) NOT NULL,
+    password VARCHAR(64) NOT NULL,
+    salt VARCHAR(64) NOT NULL,
     gender BIT NOT NULL DEFAULT 0,
     avatar VARCHAR(100),
     level INT NOT NULL DEFAULT 1,

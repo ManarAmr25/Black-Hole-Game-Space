@@ -1,5 +1,6 @@
 from models import player, stats
 from database import db_manager
+import os
 
 # player test
 '''p = player.Player("Momo")
@@ -17,5 +18,7 @@ print(db.get_player("GameAd"))
 print(db.get_player("Game"))
 #print(db.add_quote("Time is the mind of space"))
 print(db.get_quote())
-print(db.add_player("test_player", "123456789", True))
+salt = b'hello'  # Remember this
+print(type(salt))
+print(db.add_player("test_player2", salt, True))
 
