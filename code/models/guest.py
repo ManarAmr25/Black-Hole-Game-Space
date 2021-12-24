@@ -6,15 +6,15 @@ class Guest:
 
        Attributes
        ----------
-       __name : str
+       _name : str
            player's user name. uniquely identifies a player
-       __avatar : str
+       _avatar : str
            a path (relative to project directory) to the player's avatar image
-       __lvl : int
+       _lvl : int
            player's current level. minimum = 1
-       __xp : int
+       _xp : int
            player's xp points in the current level. minimum = 1
-       __max_lvl_xp : int
+       _max_lvl_xp : int
            maximum xp points in the current level. used to calculate the next level's max xp
 
        Methods
@@ -38,64 +38,64 @@ class Guest:
        """
 
     def __init__(self):
-        self.__name = "Guest"
-        self.__avatar = None
-        self.__lvl = 1
-        self.__xp = 0
-        self.__max_lvl_xp = 50
+        self._name = "Guest"
+        self._avatar = None
+        self._lvl = 1
+        self._xp = 0
+        self._max_lvl_xp = 50
 
     @staticmethod
     def build_player(name, gender=False, avatar=None, lvl=1, xp=0, weekly_xp=0, wins=0, games=0, daily_challenges=0):
         """Build a guest player with the given parameters. returns none if there are invalid parameters."""
         is_successful = True
         guest = Guest()
-        is_successful &= guest.set_name(name)
-        is_successful &= guest.set_avatar(avatar)
-        is_successful &= guest.set_level_xp(lvl, xp)
+        is_successful = is_successful and guest.set_name(name)
+        is_successful = is_successful and guest.set_avatar(avatar)
+        is_successful = is_successful and guest.set_level_xp(lvl, xp)
         return guest if is_successful else None
 
     def set_level_xp(self, level, xp):  # level and xp have to be set together
         """
         Sets Player's level and xp, default level = 1, default xp = 0.
         """
-        if isinstance(level, int) & level > 0 & isinstance(xp, int) & xp >= 0:
-            self.__lvl = level
-            self.__max_lvl_xp = 25 * self.__lvl * (1+self.__lvl)
-            self.__xp = xp
-            self.__level_up()
+        if isinstance(level, int) and level > 0 and isinstance(xp, int) and xp >= 0:
+            self._lvl = level
+            self._max_lvl_xp = 25 * self._lvl * (1+self._lvl)
+            self._xp = xp
+            self._level_up()
             return True
         else:
             return False
 
     def get_name(self):
         """Returns Player's name"""
-        return self.__name
+        return self._name
 
     def get_avatar(self):
         """Returns Player's avatar image path (relative to project directory)"""
-        return self.__avatar
+        return self._avatar
 
     def get_level(self):
         """Returns Player's current level"""
-        return self.__lvl
+        return self._lvl
 
     def get_xp(self):
         """Returns Player's xp points withing the current level"""
-        return self.__xp
+        return self._xp
 
     def increase_xp(self, xp):
         """Takes xp and adds them to Player's current xp points."""
-        if isinstance(xp, int) & xp >= 0:
-            self.__xp += xp
-            self.__level_up()  # reset level
+        if isinstance(xp, int) and xp >= 0:
+            self._xp += xp
+            self._level_up()  # reset level
 
-    def __level_up(self):
+    def _level_up(self):
         """Increments Player's level if it has enough xp points"""
-        while self.__xp >= self.__max_lvl_xp:
-            self.__xp -= self.__max_lvl_xp
-            self.__lvl += 1  # increment level
-            self.__max_lvl_xp = 25 * self.__lvl * (1 + self.__lvl)  # update level maximum xp level
+        while self._xp >= self._max_lvl_xp:
+            self._xp -= self._max_lvl_xp
+            self._lvl += 1  # increment level
+            self._max_lvl_xp = 25 * self._lvl * (1 + self._lvl)  # update level maximum xp level
 
     def xp_to_complete(self):
         """Returns remaining xp to complete the level."""
-        return self.__max_lvl_xp - self.__xp
+        return self._max_lvl_xp - self._xp
