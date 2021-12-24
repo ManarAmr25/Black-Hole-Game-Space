@@ -1,6 +1,7 @@
 import abc
+
+from auth_proxy.hashing import hash_password
 from database.db_manager import DBManager
-from hashing import *
 
 
 class SignInInterface(abc.ABC):
@@ -9,11 +10,11 @@ class SignInInterface(abc.ABC):
 
 
 class SignIn(SignInInterface):
-    __secret_token = "6390ed339b8270b"
 
     def __init__(self):
+        self.__secret_token = "6390ed339b8270b"
         try:
-            self.db = DBManager.get_instance(SignIn.__secret_token)
+            self.db = DBManager.get_instance(self.__secret_token)
         except Exception as e:
             print(e)
 
@@ -24,12 +25,12 @@ class SignIn(SignInInterface):
         :param password
         :return: true and player if player has logged in successfully or false and message error otherwise
         """
-        original_pw, salt = self.db.get_password()
+        original_pw, salt = self.db.get_password(user_name)
         if len(salt) < 64:
             return False, "Player doesn't exist!"
         else:
-            hashed_password = hash_password(salt, password)
-            if hashed_password != original_pw:
+            hashed_password = hash_password(bytes.fromhex(salt), password)
+            if hashed_password.hex() != original_pw:
                 return False, "Wrong password!"
             else:
                 return self.db.get_player(user_name)  # may return null

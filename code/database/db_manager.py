@@ -6,7 +6,6 @@ class DBManager:
     """
     A singleton class responsible for managing queries to BlackHole database.
     ...
-
     Methods
     -------
     get_instance(token):
@@ -127,7 +126,7 @@ class DBManager:
     # for sign in & profile > returns pair of empty strings if user_name isn't found
     def get_password(self, user_name):
         if not isinstance(user_name,str) or len(user_name) == 0:
-            return False
+            return "", ""
         try:
             self.__cursor.execute(f"SELECT password, salt FROM user_info WHERE name = '{str(user_name)}'")
             res = self.__cursor.fetchall()
@@ -142,17 +141,17 @@ class DBManager:
     # used after authentication
     def get_player(self, user_name):
         if not isinstance(user_name,str) or len(user_name) == 0:
-            return False
+            return False, None
         try:
             self.__cursor.execute(f"SELECT * FROM user_info WHERE name = '{str(user_name)}'")
             res = self.__cursor.fetchall()
             if len(res) == 0:
                 return False, None
             player_data = res[0]
-
+            gender = True if player_data[3] == 1 else False
             player = Player.build_player(
                 player_data[0],  # name
-                player_data[3],  # gender
+                gender,  # gender
                 player_data[4],  # avatar
                 player_data[5],  # level
                 player_data[6],  # xp
@@ -171,12 +170,12 @@ class DBManager:
     # add new player in sign up
     def add_player(self, user_name, password, salt, gender=False):
         if not isinstance(user_name,str) or len(user_name) == 0 or not isinstance(password,str) or len(password) == 0 or not isinstance(salt,str) or len(salt) == 0 or not isinstance(gender,bool):
-            return False
-        gender = 1 if gender else 0
+            return False, None
+        gend = 1 if gender else 0
 
         try:
             self.__cursor.execute(
-                f"INSERT INTO user_info(name, password, salt, gender) VALUES('{str(user_name)}', '{str(password)}','{str(salt)}', {gender})")
+                f"INSERT INTO user_info(name, password, salt, gender) VALUES('{str(user_name)}', '{str(password)}','{str(salt)}', {gend})")
             self.__connection.commit()
             player = Player.build_player(
                 user_name,  # name
@@ -198,10 +197,13 @@ class DBManager:
             gender = 1
         else:
             gender = 0
+        if not self.check_name(player.get_name()):
+            return False
         try:
             self.__cursor.execute(
-                f"UPDATE user_info SET name = '{player.get_name()}', gender = {gender}, avatar = '{player.get_avatar()}', level = {player.get_level()}, xp = {player.get_xp()}, weekly_xp = {player.get_weekly_xp()}, wins = {player.get_wins()}, games = {player.get_games()}, daily_ch = {player.get_daily_ch()}")
+                f"UPDATE user_info SET name = '{player.get_name()}', gender = {gender}, avatar = '{player.get_avatar()}', level = {player.get_level()}, xp = {player.get_xp()}, weekly_xp = {player.get_weekly_xp()}, wins = {player.get_wins()}, games = {player.get_games()}, daily_ch = {player.get_daily_challenges()} WHERE name = '{str(player.get_name())}'")
             self.__connection.commit()
+
             return True
         except Exception as e:
             print(e)
@@ -211,8 +213,11 @@ class DBManager:
     def update_name(self, old_name, new_name):
         if not isinstance(old_name, str) or len(old_name) == 0 or not isinstance(new_name,str) or len(new_name) == 0:
             return False
+        if not self.check_name(old_name):
+            return False
         try:
             self.__cursor.execute(f"UPDATE user_info SET name = '{str(new_name)}' WHERE name = '{str(old_name)}'")
+            self.__connection.commit()
             return True
         except Exception as e:
             print(e)
@@ -222,9 +227,12 @@ class DBManager:
     def update_password(self, name, old_password, new_password):
         if not isinstance(name,str) or len(name) == 0 or not isinstance(old_password,str) or len(old_password) == 0 or not isinstance(new_password,str) or len(new_password) == 0:
             return False
+        if not self.check_name(name):
+            return False
         try:
             self.__cursor.execute(
                 f"UPDATE user_info SET password = '{str(new_password)}' WHERE name = '{str(name)}' AND password = '{str(old_password)}'")
+            self.__connection.commit()
             return True
         except Exception as e:
             print(e)

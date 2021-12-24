@@ -1,17 +1,43 @@
 import sys
 import time
-
 from PyQt5 import QtCore, QtWidgets
 from PyQt5 import QtGui
 from PyQt5.QtCore import QUrl, QSize
 from PyQt5.QtGui import QMovie, QPainter
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QProgressBar, QLabel
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QProgressBar, QLabel, QLineEdit
+
+from auth_proxy.facade import Facade
+from gamespace import GamespaceMain
 
 
-class UIWindow(QWidget):
+class SigninWindow(QWidget):
+
+    def get_username(self):
+        #print(self.lineEdit.text())
+        return self.lineEdit.text()
+
+    def get_user_password(self):
+        #print(self.lineEdit_2.text())
+        return self.lineEdit_2.text()
+
+    def toggle_visibility(self):
+        if self.lineEdit_2.echoMode() == QLineEdit.Normal:
+            self.lineEdit_2.setEchoMode(QLineEdit.Password)
+        else:
+            self.lineEdit_2.setEchoMode(QLineEdit.Normal)
+
+    def sign_in_db(self):
+        f = Facade()
+        check, response = f.signin_request(self.get_username(), self.get_user_password())
+        if not check:
+            print(response)
+            return False
+        else:
+            return True
+
     def __init__(self, parent=None):
-        super(UIWindow, self).__init__(parent)
+        super(SigninWindow, self).__init__(parent)
         self.setObjectName("Form")
         self.resize(1938, 1043)
         font = QtGui.QFont()
@@ -104,9 +130,7 @@ class UIWindow(QWidget):
                                       "")
         self.pushButton.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("D:/CSED/Third Year/First Semester/SE/project/space/space/icons/icons8-space"
-                                      "-shuttle-50.png"), QtGui.QIcon.Normal,
-                        QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("../storage/Icons/back.png"), QtGui.QIcon.Normal,QtGui.QIcon.Off)
         self.pushButton.setIcon(icon1)
         self.pushButton.setIconSize(QtCore.QSize(80, 80))
         self.pushButton.setObjectName("pushButton")
@@ -119,11 +143,12 @@ class UIWindow(QWidget):
         self.pushButton_2.setText("")
         icon2 = QtGui.QIcon()
         icon2.addPixmap(
-            QtGui.QPixmap("D:/CSED/Third Year/First Semester/SE/project/space/space/icons/icons8-millenium-eye-64.png"),
+            QtGui.QPixmap("../storage/Icons/showPassword.png"),
             QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_2.setIcon(icon2)
         self.pushButton_2.setIconSize(QtCore.QSize(50, 50))
         self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_2.clicked.connect(self.toggle_visibility)
         self.pushButton_3 = QtWidgets.QPushButton(self)
         self.pushButton_3.setGeometry(QtCore.QRect(910, 800, 221, 51))
         font = QtGui.QFont()
@@ -150,7 +175,7 @@ class UIWindow(QWidget):
                                         "}")
         icon3 = QtGui.QIcon()
         icon3.addPixmap(
-            QtGui.QPixmap("D:/CSED/Third Year/First Semester/SE/project/space/space/icons/icons8-space-32.png"),
+            QtGui.QPixmap("../storage/Icons/nextPage.png"),
             QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_3.setIcon(icon3)
         self.pushButton_3.setIconSize(QtCore.QSize(100, 100))
@@ -179,20 +204,19 @@ class UIWindow(QWidget):
         self.pushButton_3.setText(_translate("Form", "Let\'s GO"))
 
 
-class MainWindow(QMainWindow):
+class SigninMain(QMainWindow):
     def __init__(self, parent=None):
-        super(MainWindow, self).__init__(parent)
+        super(SigninMain, self).__init__(parent)
         self.setGeometry(50, 50, 600, 750)
-        self.setFixedSize(1579, 891)
+        self.setFixedSize(1920, 1080)
         self.startUIWindow()
-        self.movie = QMovie("f.JPG")
+        self.movie = QMovie("../storage/BackGround/user.jpg")
         self.movie.frameChanged.connect(self.repaint)
         self.movie.start()
 
     def startUIWindow(self):
-        self.Window = UIWindow(self)
+        self.Window = SigninWindow(self)
         self.setWindowTitle("My Program")
-        self.show()
 
     def paintEvent(self, event):
         currentFrame = self.movie.currentPixmap()
@@ -201,9 +225,3 @@ class MainWindow(QMainWindow):
         if frameRect.intersects(event.rect()):
             painter = QPainter(self)
             painter.drawPixmap(frameRect.left(), frameRect.top(), currentFrame)
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    w = MainWindow()
-    sys.exit(app.exec_())
