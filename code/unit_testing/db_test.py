@@ -58,7 +58,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_new_player(self):
         db = DBManager.get_instance(correct_token)
-        
+
 
 
 
