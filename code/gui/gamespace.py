@@ -1,17 +1,14 @@
-import sys
-import time
-
 from PyQt5 import QtCore, QtWidgets
 from PyQt5 import QtGui
-from PyQt5.QtCore import QUrl, QSize
 from PyQt5.QtGui import QMovie, QPainter
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
+import profile_page
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QProgressBar, QLabel
 
 
-class UIWindow(QWidget):
+class GamespaceWindow(QWidget):
+
     def __init__(self, parent=None):
-        super(UIWindow, self).__init__(parent)
+        super(GamespaceWindow, self).__init__(parent)
         self.setObjectName("MainWindow")
         self.resize(2102, 966)
         self.centralwidget = QtWidgets.QWidget(self)
@@ -19,8 +16,6 @@ class UIWindow(QWidget):
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(-130, -20, 2591, 1081))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap(
-            "D:/CSED/Third Year/First Semester/SE/project/Black-Hole-Game-Space-main/Black-Hole-Game-Space-main/designs/892.jpg"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
@@ -101,20 +96,20 @@ class UIWindow(QWidget):
         self.label_6.setText(_translate("MainWindow", "Game "))
 
 
-class MainWindow(QMainWindow):
+class GamespaceMain(QMainWindow):
     def __init__(self, parent=None):
-        super(MainWindow, self).__init__(parent)
+        super(GamespaceMain, self).__init__(parent)
         self.setGeometry(50, 50, 600, 750)
-        self.setFixedSize(1579, 891)
+        self.setFixedSize(1920, 1080)
         self.startUIWindow()
-        self.movie = QMovie("q.JPEG")
+        self.movie = QMovie("../storage/BackGround/gamespace.jpg")
         self.movie.frameChanged.connect(self.repaint)
         self.movie.start()
 
     def startUIWindow(self):
-        self.Window = UIWindow(self)
+        self.Window = GamespaceWindow(self)
         self.setWindowTitle("My Program")
-        self.show()
+        #self.show()
 
     def paintEvent(self, event):
         currentFrame = self.movie.currentPixmap()
@@ -124,8 +119,3 @@ class MainWindow(QMainWindow):
             painter = QPainter(self)
             painter.drawPixmap(frameRect.left(), frameRect.top(), currentFrame)
 
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    w = MainWindow()
-    sys.exit(app.exec_())

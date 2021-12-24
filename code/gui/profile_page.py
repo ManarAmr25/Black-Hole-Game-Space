@@ -1,17 +1,12 @@
-import sys
-import time
-
 from PyQt5 import QtCore, QtWidgets
 from PyQt5 import QtGui
-from PyQt5.QtCore import QUrl, QSize
 from PyQt5.QtGui import QMovie, QPainter
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QProgressBar, QLabel
+from PyQt5.QtWidgets import  QMainWindow,QWidget
 
 
-class UIWindow(QWidget):
+class ProfileWindow(QWidget):
     def __init__(self, parent=None):
-        super(UIWindow, self).__init__(parent)
+        super(ProfileWindow, self).__init__(parent)
         self.setObjectName("Form")
         self.resize(1920, 1020)
         font = QtGui.QFont()
@@ -217,7 +212,7 @@ class UIWindow(QWidget):
                                         "}")
         self.pushButton_4.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("../space/icons/icons8-space-shuttle-50.png"), QtGui.QIcon.Normal,
+        icon1.addPixmap(QtGui.QPixmap("../storage/Icons/back.png"), QtGui.QIcon.Normal,
                         QtGui.QIcon.Off)
         self.pushButton_4.setIcon(icon1)
         self.pushButton_4.setIconSize(QtCore.QSize(50, 50))
@@ -254,20 +249,19 @@ class UIWindow(QWidget):
         self.label_8.setText(_translate("Form", " number of wins : "))
 
 
-class MainWindow(QMainWindow):
+class ProfileMain(QMainWindow):
     def __init__(self, parent=None):
-        super(MainWindow, self).__init__(parent)
+        super(ProfileMain, self).__init__(parent)
         self.setGeometry(50, 50, 600, 750)
-        self.setFixedSize(1579, 891)
+        self.setFixedSize(1920, 1080)
         self.startUIWindow()
-        self.movie = QMovie("f.JPG")
+        self.movie = QMovie("../storage/BackGround/user.jpg")
         self.movie.frameChanged.connect(self.repaint)
         self.movie.start()
 
     def startUIWindow(self):
-        self.Window = UIWindow(self)
+        self.Window = ProfileWindow(self)
         self.setWindowTitle("My Program")
-        self.show()
 
     def paintEvent(self, event):
         currentFrame = self.movie.currentPixmap()
@@ -278,7 +272,3 @@ class MainWindow(QMainWindow):
             painter.drawPixmap(frameRect.left(), frameRect.top(), currentFrame)
 
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    w = MainWindow()
-    sys.exit(app.exec_())

@@ -1,7 +1,7 @@
 import abc
-from models.player import Player
+
+from auth_proxy.hashing import generate_salt, hash_password
 from database.db_manager import DBManager
-from hashing import *
 
 
 # formal interface
@@ -15,11 +15,10 @@ class SignUpInterface(abc.ABC):
 # class implements the interface
 class SignUp(SignUpInterface):
 
-    __secret_token = "6390ed339b8270b"
-
     def __init__(self):
+        self.__secret_token = "6390ed339b8270b"
         try:
-            self.db = DBManager.get_instance(SignUp.__secret_token)
+            self.db = DBManager.get_instance(self.__secret_token)
         except Exception as e:
             print(e)
 
@@ -31,14 +30,17 @@ class SignUp(SignUpInterface):
         :param gender
         :return: true and player object or false and an error message
         """
-        if not self.validate_password(password):
+        print("in proxy")
+        if not SignUp.__validate_password(password):
             return False, "Invalid password!"
         elif self.db.check_name(name):
             return False, "Name already exists!"
         else:
             salt = generate_salt()
+            print("salt: ",salt.hex())
             password = hash_password(salt, password)
-            return self.db.add_player(name, password, salt, gender)
+            print("password: ", password.hex())
+            return self.db.add_player(name, password.hex(), salt.hex(), gender)
 
     # check password
     @staticmethod
