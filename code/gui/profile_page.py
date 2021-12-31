@@ -1,24 +1,50 @@
+import sys
 from PyQt5 import QtCore, QtWidgets
 from PyQt5 import QtGui
-from PyQt5.QtGui import QMovie, QPainter
-from PyQt5.QtWidgets import QMainWindow, QWidget
+from PyQt5.QtGui import QMovie, QPainter, QPixmap
+from PyQt5.QtWidgets import QMainWindow, QWidget, QFileDialog
 
 from auth_proxy.facade import Facade
 
 
 class ProfileWindow(QWidget):
 
+    def get_image(self):
+        fname = QFileDialog.getOpenFileName(self, "Open file", "c:\\", "Image files (*.jpg *.jpeg *.png)")
+        image_path = fname[0]
+        print(image_path)
+        pixmap = QPixmap(image_path)
+        # pixmap.resize(self.label_2.width(), self.label_2.height())
+        self.label_2.setPixmap(QPixmap(pixmap))
+        self.label_2.setScaledContents(True)
+        # self.label_2.resize(pixmap.width(), pixmap.height())
+        # TODO : copy image to our storage to use it later
+
+    def save_name(self):
+        self.pushButton_2.setText("Edit")
+        print(self.lineEdit.text())
+        # f = Facade()  # TODO : facade needs to have more functionality from data base manager
+        self.lineEdit.setDisabled(True)
+
+    def enable_name(self):
+        print("edit name")
+        self.pushButton_2.setText("Save")
+        self.lineEdit.setEnabled(True)
+        self.lineEdit.setFocus(True)
+
     def toggle_field(self):
         if self.lineEdit.isEnabled():  # button is active now and we need to save changes
-            self.pushButton_2.setText("Edit")
-            print(self.lineEdit.text())
-            f = Facade()  # TODO : facade needs to have more functionality from data base manager
-            self.lineEdit.setDisabled(True)
+            self.save_name()
         else:  # button is disabled and we need to make changes
-            print("edit name")
-            self.pushButton_2.setText("Save")
-            self.lineEdit.setEnabled(True)
-            self.lineEdit.setFocus(True)
+            self.enable_name()
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Return:
+            self.save_name()
+
+    # TODO : needs player object, either as a parameter or a class member
+    def consume_player(self, player):
+        self.lineEdit.setText(player.get_name())
 
     def __init__(self, parent=None):
         super(ProfileWindow, self).__init__(parent)
@@ -207,40 +233,100 @@ class ProfileWindow(QWidget):
         self.frame.setObjectName("frame")
         self.label_8 = QtWidgets.QLabel(self.frame)
         self.label_8.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-        self.label_8.setGeometry(QtCore.QRect(20, 20, 230, 35))
+        self.label_8.setGeometry(QtCore.QRect(40, 20, 250, 35))
         font = QtGui.QFont()
         font.setFamily("OCR A Extended")
         font.setPointSize(11)
         self.label_8.setFont(font)
-        self.label_8.setStyleSheet("color: rgb(255, 255, 255);\n"
-                                   "border : none;")
+        self.label_8.setStyleSheet("color: rgb(0, 13, 46);\n"
+                                   "border : none;\n"
+                                   "background:none;\n"
+                                   "font-size : 20px;\n"
+                                   "font-weight : 600;")
         self.label_8.setObjectName("label_8")
         # TODO :
         self.label_9 = QtWidgets.QLabel(self.frame)
         self.label_9.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-        self.label_9.setGeometry(QtCore.QRect(20, 90, 230, 35))
+        self.label_9.setGeometry(QtCore.QRect(40, 90, 250, 35))
         self.label_9.setFont(font)
-        self.label_9.setStyleSheet("color: rgb(255, 255, 255);\n"
-                                   "border : none;")
+        self.label_9.setStyleSheet("color: rgb(0, 13, 46);\n"
+                                   "border : none;\n"
+                                   "background:none;\n"
+                                   "font-size : 20px;\n"
+                                   "font-weight : 600;")
         self.label_9.setObjectName("label_9")
 
         # TODO :
         self.label_10 = QtWidgets.QLabel(self.frame)
         self.label_10.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-        self.label_10.setGeometry(QtCore.QRect(20, 160, 230, 35))
+        self.label_10.setGeometry(QtCore.QRect(40, 160, 250, 35))
         self.label_10.setFont(font)
-        self.label_10.setStyleSheet("color: rgb(255, 255, 255);\n"
-                                   "border : none;")
+        self.label_10.setStyleSheet("color: rgb(0, 13, 46);\n"
+                                    "border : none;\n"
+                                    "background:none;\n"
+                                    "font-size : 20px;\n"
+                                    "font-weight : 600;")
         self.label_10.setObjectName("label_10")
 
         # TODO :
         self.label_11 = QtWidgets.QLabel(self.frame)
         self.label_11.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-        self.label_11.setGeometry(QtCore.QRect(20, 230, 230, 35))
+        self.label_11.setGeometry(QtCore.QRect(40, 230, 250, 35))
         self.label_11.setFont(font)
-        self.label_11.setStyleSheet("color: rgb(255, 255, 255);\n"
-                                   "border : none;")
+        self.label_11.setStyleSheet("color: rgb(0, 13, 46);\n"
+                                    "border : none;\n"
+                                    "background:none;\n"
+                                    "font-size : 20px;\n"
+                                    "font-weight : 600;")
         self.label_11.setObjectName("label_11")
+
+        # TODO :
+        self.label_12 = QtWidgets.QLabel(self.frame)
+        self.label_12.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.label_12.setGeometry(QtCore.QRect(170, 20, 250, 35))
+        self.label_12.setFont(font)
+        self.label_12.setStyleSheet("color: rgb(248, 255, 105);\n"
+                                    "border : none;\n"
+                                    "background:none;\n"
+                                    "font-size : 19px;\n"
+                                    "font-weight : 500;")
+        self.label_12.setObjectName("label_12")
+
+        # TODO :
+        self.label_13 = QtWidgets.QLabel(self.frame)
+        self.label_13.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.label_13.setGeometry(QtCore.QRect(170, 90, 250, 35))
+        self.label_13.setFont(font)
+        self.label_13.setStyleSheet("color: rgb(248, 255, 105);\n"
+                                    "border : none;\n"
+                                    "background:none;\n"
+                                    "font-size : 19px;\n"
+                                    "font-weight : 500;")
+        self.label_13.setObjectName("label_13")
+
+        # TODO :
+        self.label_14 = QtWidgets.QLabel(self.frame)
+        self.label_14.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.label_14.setGeometry(QtCore.QRect(170, 160, 250, 35))
+        self.label_14.setFont(font)
+        self.label_14.setStyleSheet("color: rgb(248, 255, 105);\n"
+                                    "border : none;\n"
+                                    "background:none;\n"
+                                    "font-size : 19px;\n"
+                                    "font-weight : 500;")
+        self.label_14.setObjectName("label_14")
+
+        # TODO :
+        self.label_15 = QtWidgets.QLabel(self.frame)
+        self.label_15.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.label_15.setGeometry(QtCore.QRect(170, 230, 250, 35))
+        self.label_15.setFont(font)
+        self.label_15.setStyleSheet("color: rgb(248, 255, 105);\n"
+                                    "border : none;\n"
+                                    "background:none;\n"
+                                    "font-size : 19px;\n"
+                                    "font-weight : 500;")
+        self.label_15.setObjectName("label_15")
 
         self.pushButton_4 = QtWidgets.QPushButton(self)
         self.pushButton_4.setGeometry(QtCore.QRect(40, 870, 80, 80))
@@ -274,6 +360,7 @@ class ProfileWindow(QWidget):
         self.pushButton_4.raise_()
 
         self.retranslateUi(self)
+
         self.pushButton_2.clicked.connect(self.lineEdit.showNormal)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(self)
 
@@ -290,6 +377,8 @@ class ProfileWindow(QWidget):
         self.pushButton_2.setText(_translate("Form", "Edit"))
         # TODO : is this the right place for this line of code
         self.pushButton_2.clicked.connect(self.toggle_field)
+        self.pushButton.clicked.connect(self.get_image)
+
         self.label_6.setText(_translate("Form", "User Name already exists"))
         self.label_6.setVisible(False)
         self.pushButton_3.setText(_translate("Form", "Change password"))
@@ -297,6 +386,10 @@ class ProfileWindow(QWidget):
         self.label_9.setText(_translate("Form", "  number of games : "))
         self.label_10.setText(_translate("Form", "  daily challenges : "))
         self.label_11.setText(_translate("Form", "  this week's xp : "))
+        self.label_12.setText(_translate("Form", "  a number "))
+        self.label_13.setText(_translate("Form", "  a number "))
+        self.label_14.setText(_translate("Form", "  a number "))
+        self.label_15.setText(_translate("Form", "  a number "))
 
 
 class ProfileMain(QMainWindow):
