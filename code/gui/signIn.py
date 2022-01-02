@@ -7,201 +7,203 @@ from PyQt5.QtGui import QMovie, QPainter
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QProgressBar, QLabel, QLineEdit
 
+import gui
+import params
 from auth_proxy.facade import Facade
 from gamespace import GamespaceMain
 
 
 class SigninWindow(QWidget):
 
-    def get_username(self):
-        #print(self.lineEdit.text())
-        return self.lineEdit.text()
-
-    def get_user_password(self):
-        #print(self.lineEdit_2.text())
-        return self.lineEdit_2.text()
-
-    def toggle_visibility(self):
-        if self.lineEdit_2.echoMode() == QLineEdit.Normal:
-            self.lineEdit_2.setEchoMode(QLineEdit.Password)
-        else:
-            self.lineEdit_2.setEchoMode(QLineEdit.Normal)
-
-    def sign_in_db(self):
-        f = Facade()
-        check, response = f.signin_request(self.get_username(), self.get_user_password())
-        if not check:
-            print(response)
-            return False
-        else:
-            return True
-
     def __init__(self, parent=None):
         super(SigninWindow, self).__init__(parent)
-        self.setObjectName("Form")
+        # self.setObjectName("Form")
         self.resize(1938, 1043)
-        font = QtGui.QFont()
-        font.setPointSize(15)
-        self.setFont(font)
+        self.setFont(params.get_font(15))
         icon = QtGui.QIcon()
         icon.addPixmap(
             QtGui.QPixmap("D:/CSED/Third Year/First Semester/SE/project/space/space/icons/icons8-space-64.png"),
             QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.setWindowIcon(icon)
-        self.setStyleSheet("QLineEdit{\n"
-                           "background-color: rgba(230, 230, 230,0.6) ;\n"
-                           "border: 5px solid rgba(0,0,0,0) ;\n"
-                           "border-radius:4px ;\n"
-                           "bordar-bottom-color:rgba(46,82,101,200) ;\n"
-                           "color: #14279B ;\n"
-                           "padding-bottom:7px ;\n"
-                           "}")
-        self.label = QtWidgets.QLabel(self)
-        self.label.setGeometry(QtCore.QRect(240, 390, 281, 61))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(30)
-        self.label.setFont(font)
-        self.label.setStyleSheet("color: white;\n"
-                                 "background opacity: 0.0;")
-        self.label.setScaledContents(False)
-        self.label.setObjectName("label")
-        self.label_2 = QtWidgets.QLabel(self)
-        self.label_2.setGeometry(QtCore.QRect(80, 130, 361, 91))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(50)
-        self.label_2.setFont(font)
-        self.label_2.setStyleSheet("color: white;")
-        self.label_2.setScaledContents(False)
-        self.label_2.setObjectName("label_2")
-        self.label_3 = QtWidgets.QLabel(self)
-        self.label_3.setGeometry(QtCore.QRect(250, 510, 251, 61))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(30)
-        self.label_3.setFont(font)
-        self.label_3.setStyleSheet("color: white;")
-        self.label_3.setScaledContents(False)
-        self.label_3.setObjectName("label_3")
-        self.lineEdit = QtWidgets.QLineEdit(self)
-        self.lineEdit.setGeometry(QtCore.QRect(570, 400, 401, 51))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(15)
-        self.lineEdit.setFont(font)
-        self.lineEdit.setStyleSheet("\n"
-                                    "")
-        self.lineEdit.setText("")
-        self.lineEdit.setObjectName("lineEdit")
-        self.label_4 = QtWidgets.QLabel(self)
-        self.label_4.setGeometry(QtCore.QRect(0, -10, 2621, 1081))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(10)
-        self.label_4.setFont(font)
-        self.label_4.setStyleSheet("background-image:url(:/newPrefix/f.jpg);\n"
-                                   "background-repeat: no-repeat;\n"
-                                   "background-size: contain, cover;")
-        self.label_4.setText("")
-        self.label_4.setTextFormat(QtCore.Qt.AutoText)
-        self.label_4.setScaledContents(True)
-        self.label_4.setObjectName("label_4")
-        self.lineEdit_2 = QtWidgets.QLineEdit(self)
-        self.lineEdit_2.setGeometry(QtCore.QRect(570, 510, 401, 51))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(15)
-        self.lineEdit_2.setFont(font)
-        self.lineEdit_2.setStatusTip("")
-        self.lineEdit_2.setStyleSheet("")
-        self.lineEdit_2.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.pushButton = QtWidgets.QPushButton(self)
-        self.pushButton.setGeometry(QtCore.QRect(50, 790, 81, 81))
-        self.pushButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton.setStyleSheet("QPushButton{\n"
-                                      "background-color:rgba(152,186,231,0.7);\n"
-                                      "border-radius: 40px;\n"
-                                      "}\n"
-                                      "QPushButton:hover{\n"
-                                      "background-color:#98BAE7;\n"
-                                      "}\n"
-                                      "")
-        self.pushButton.setText("")
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("../storage/Icons/back.png"), QtGui.QIcon.Normal,QtGui.QIcon.Off)
-        self.pushButton.setIcon(icon1)
-        self.pushButton.setIconSize(QtCore.QSize(80, 80))
-        self.pushButton.setObjectName("pushButton")
-        self.pushButton_2 = QtWidgets.QPushButton(self)
-        self.pushButton_2.setGeometry(QtCore.QRect(910, 510, 61, 51))
-        self.pushButton_2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton_2.setStyleSheet("background-color: transparent;\n"
-                                        "background:none;\n"
-                                        "border: none;")
-        self.pushButton_2.setText("")
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(
-            QtGui.QPixmap("../storage/Icons/showPassword.png"),
-            QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton_2.setIcon(icon2)
-        self.pushButton_2.setIconSize(QtCore.QSize(50, 50))
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.pushButton_2.clicked.connect(self.toggle_visibility)
-        self.pushButton_3 = QtWidgets.QPushButton(self)
-        self.pushButton_3.setGeometry(QtCore.QRect(910, 800, 221, 51))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(20)
-        self.pushButton_3.setFont(font)
-        self.pushButton_3.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton_3.setStyleSheet("QPushButton {\n"
-                                        "    background:linear-gradient(to bottom, #599bb3 5%, #408c99 100%);\n"
-                                        "    background-color:#E6E6E6;\n"
-                                        "    border-radius:8px;\n"
-                                        "    border:1px solid #d6bcd6;\n"
-                                        "    color:#3a8a9e;\n"
-                                        "    text-decoration:none;\n"
-                                        "    text-shadow:0px 1px 0px #e1e2ed;\n"
-                                        "}\n"
-                                        "QPushButton:hover {\n"
-                                        "    background:linear-gradient(to bottom, #bab1ba 5%, #ededed 100%);\n"
-                                        "    background-color:#bab1ba;\n"
-                                        "}\n"
-                                        "QPushButton:active {\n"
-                                        "    position:relative;\n"
-                                        "    top:1px;\n"
-                                        "}")
-        icon3 = QtGui.QIcon()
-        icon3.addPixmap(
-            QtGui.QPixmap("../storage/Icons/nextPage.png"),
-            QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton_3.setIcon(icon3)
-        self.pushButton_3.setIconSize(QtCore.QSize(100, 100))
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.label_4.raise_()
-        self.label.raise_()
-        self.label_2.raise_()
-        self.label_3.raise_()
-        self.lineEdit.raise_()
-        self.lineEdit_2.raise_()
-        self.pushButton.raise_()
-        self.pushButton_2.raise_()
-        self.pushButton_3.raise_()
 
-        self.retranslateUi(self)
+        # self.setWindowIcon(params.app_icon)
+        self.setWindowTitle("Sign In")
+        # ###################################################################################################3
+
+        self.background = self.get_background()
+        self.title_label = self.get_title_label()
+        self.username_label = self.get_username_label()
+        self.password_label = self.get_password_label()
+        self.username_lineEdit = self.get_username_lineEdit()
+        self.password_lineEdit = self.get_password_lineEdit()
+        self.show_password_button = self.get_show_password_button()
+        self.invalid_username_label = self.get_invalid_username_label()
+        self.invalid_password_label = self.get_invalid_password_label()
+        self.back_button = self.get_back_button()
+        self.next_button = self.get_next_button()
+
+        self.background.raise_()
+        self.title_label.raise_()
+        self.username_label.raise_()
+        self.password_label.raise_()
+        self.username_lineEdit.raise_()
+        self.password_lineEdit.raise_()
+        self.show_password_button.raise_()
+        self.invalid_username_label.raise_()
+        self.invalid_password_label.raise_()
+        self.back_button.raise_()
+        self.next_button.raise_()
+
         QtCore.QMetaObject.connectSlotsByName(self)
 
-    def retranslateUi(self, Form):
-        _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.label.setText(_translate("Form", "User Name"))
-        self.label_2.setText(_translate("Form", "Sign In"))
-        self.label_3.setText(_translate("Form", "Password"))
-        self.lineEdit.setPlaceholderText(_translate("Form", "Enter Your Name"))
-        self.lineEdit_2.setPlaceholderText(_translate("Form", "Enter Your Password"))
-        self.pushButton_3.setText(_translate("Form", "Let\'s GO"))
+    def get_title_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(80, 130, 361, 91))
+        label.setFont(params.get_font(50))
+        label.setStyleSheet("color: white;")
+        label.setScaledContents(False)
+        label.setText("Sign In")
+        label.setObjectName("title_label")
+        return label
+
+    def get_username_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(240, 390, 281, 61))
+        label.setFont(params.get_font(30))
+        label.setStyleSheet("color: white;\n"
+                            "background opacity: 0.0;")
+        label.setScaledContents(False)
+        label.setText("User Name")
+        label.setObjectName("username_label")
+        return label
+
+    def get_password_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(250, 510, 251, 61))
+        label.setFont(params.get_font(30))
+        label.setStyleSheet("color: white;")
+        label.setScaledContents(False)
+        label.setText("Password")
+        label.setObjectName("password_label")
+        return label
+
+    def get_username_lineEdit(self):
+        lineEdit = QtWidgets.QLineEdit(self)
+        lineEdit.setGeometry(QtCore.QRect(570, 400, 401, 51))
+        lineEdit.setFont(params.get_font(15))
+        lineEdit.setStyleSheet(params.sign_in_lineEdit_style)
+        lineEdit.setPlaceholderText("Enter Your Name")
+        lineEdit.setText("")
+        lineEdit.setObjectName("username_lineEdit")
+        return lineEdit
+
+    def get_password_lineEdit(self):
+        lineEdit = QtWidgets.QLineEdit(self)
+        lineEdit.setGeometry(QtCore.QRect(570, 510, 401, 51))
+        lineEdit.setFont(params.get_font(15))
+        lineEdit.setStatusTip("")
+        lineEdit.setStyleSheet(params.sign_in_lineEdit_style)
+        lineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
+        lineEdit.setPlaceholderText("Enter Your Password")
+        lineEdit.setObjectName("password_lineEdit")
+        return lineEdit
+
+    def get_background(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(0, -10, 2621, 1081))
+        label.setFont(params.get_font(10))
+        label.setStyleSheet(params.background_style)
+        label.setText("")
+        label.setTextFormat(QtCore.Qt.AutoText)
+        label.setScaledContents(True)
+        label.setObjectName("background")
+        return label
+
+    def get_back_button(self):
+        button = QtWidgets.QPushButton(self)
+        button.setGeometry(QtCore.QRect(50, 790, 81, 81))
+        button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        button.setStyleSheet(params.back_button_style)
+        button.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("../storage/Icons/back.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        button.setIcon(icon)
+        button.setIconSize(QtCore.QSize(80, 80))
+        button.setObjectName("back_pushButton")
+        return button
+
+    def get_show_password_button(self):
+        button = QtWidgets.QPushButton(self)
+        button.setGeometry(QtCore.QRect(910, 510, 61, 51))
+        button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        button.setStyleSheet(params.show_password_button_style)
+        button.setText("")
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("../storage/Icons/showPassword.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        button.setIcon(icon2)
+        button.setIconSize(QtCore.QSize(50, 50))
+        button.setObjectName("show_password_pushButton")
+        button.clicked.connect(self.toggle_visibility)
+        return button
+
+    def get_next_button(self):
+        button = QtWidgets.QPushButton(self)
+        button.setGeometry(QtCore.QRect(910, 800, 221, 51))
+        button.setFont(params.get_font(20))
+        button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        button.setStyleSheet(params.next_button_style)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap("../storage/Icons/nextPage.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        button.setIcon(icon3)
+        button.setIconSize(QtCore.QSize(100, 100))
+        button.setText("Let\'s GO")
+        button.setObjectName("next_pushButton")
+        return button
+
+    def get_invalid_username_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(990, 390, 221, 41))
+        label.setFont(params.get_font(16))
+        label.setStyleSheet(params.invalid_style)
+        label.setVisible(False)
+        label.setObjectName("invalid_un_label")
+        return label
+
+    def get_invalid_password_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(990, 510, 301, 31))
+        label.setFont(params.get_font(18))
+        label.setStyleSheet(params.invalid_style)
+        label.setVisible(False)
+        label.setObjectName("invalid_pw_label")
+        return label
+
+    def get_username(self):
+        return self.username_lineEdit.text()
+
+    def get_user_password(self):
+        return self.password_lineEdit.text()
+
+    def toggle_visibility(self):
+        print(gui.player_global)
+        if self.password_lineEdit.echoMode() == QLineEdit.Normal:
+            self.password_lineEdit.setEchoMode(QLineEdit.Password)
+        else:
+            self.password_lineEdit.setEchoMode(QLineEdit.Normal)
+
+    def sign_in_db(self):
+        self.invalid_username_label.setVisible(True)
+        self.invalid_password_label.setVisible(True)
+
+        # TODO : needs facade to determine wrong username or password
+        f = Facade()
+        # check > boolean, response > player object
+        check, response = f.signin_request(self.get_username(), self.get_user_password())
+        if not check:
+            print("response in gui : ", response)
+            return False
+        else:
+            gui.player_global = response
+            return True
 
 
 class SigninMain(QMainWindow):
@@ -225,3 +227,7 @@ class SigninMain(QMainWindow):
         if frameRect.intersects(event.rect()):
             painter = QPainter(self)
             painter.drawPixmap(frameRect.left(), frameRect.top(), currentFrame)
+
+    def refresh(self):
+        self.Window.username_lineEdit.setText("")
+        self.Window.password_lineEdit.setText("")

@@ -7,10 +7,210 @@ from PyQt5.QtGui import QMovie, QPainter
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QProgressBar, QLabel, QLineEdit
 
+import gui
+import params
 from auth_proxy.facade import Facade
 
 
 class SignupWindow(QWidget):
+
+    def __init__(self, parent=None):
+        super(SignupWindow, self).__init__(parent)
+        self.setObjectName("Form")
+        self.resize(1383, 858)
+        self.setFont(params.get_font(15))
+        self.setStyleSheet("")
+        # ####################################################################
+        self.userNameLbl = self.get_username_label()
+        self.signUpLbl = self.get_signup_label()
+        self.passwordLbl = self.get_password_label()
+        self.userNameTxtBox = self.get_username_txtbox()
+        self.passwordTxtBox = self.get_password_txtbox()
+        self.back_button = self.get_back_button()
+        self.showPasswordBtn = self.get_show_password_button()
+        self.genderLbl = self.get_gender_label()
+        self.maleRdBtn = self.get_male_radiobutton()
+        self.femaleRdBtn = self.get_female_radiobutton()
+        self.invalidNameLbl = self.get_invalid_name_label()
+        self.changePasswordLbl = self.get_change_password_label()
+        self.checkGenderLbl = self.get_check_gender_label()
+        self.next_button = self.get_next_button()
+
+        self.userNameLbl.raise_()
+        self.signUpLbl.raise_()
+        self.passwordLbl.raise_()
+        self.userNameTxtBox.raise_()
+        self.passwordTxtBox.raise_()
+        self.back_button.raise_()
+        self.showPasswordBtn.raise_()
+        self.genderLbl.raise_()
+        self.maleRdBtn.raise_()
+        self.femaleRdBtn.raise_()
+        self.invalidNameLbl.raise_()
+        self.changePasswordLbl.raise_()
+        self.checkGenderLbl.raise_()
+        self.next_button.raise_()
+
+        QtCore.QMetaObject.connectSlotsByName(self)
+
+    def get_username_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(240, 390, 291, 71))
+        label.setFont(params.get_font(30))
+        label.setStyleSheet("color: white;\n"
+                            "background opacity: 0.0;")
+        label.setScaledContents(False)
+        label.setText("User Name")
+        label.setObjectName("userNameLbl")
+        return label
+
+    def get_signup_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(80, 130, 381, 101))
+        label.setFont(params.get_font(50))
+        label.setStyleSheet("color: white;")
+        label.setScaledContents(False)
+        label.setText("Sign Up")
+        label.setObjectName("signUpLbl")
+        return label
+
+    def get_password_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(250, 510, 271, 51))
+        label.setFont(params.get_font(30))
+        label.setStyleSheet("color: white;")
+        label.setScaledContents(False)
+        label.setText("Password")
+        label.setObjectName("passwordLbl")
+        return label
+
+    def get_username_txtbox(self):
+        txtbox = QtWidgets.QLineEdit(self)
+        txtbox.setGeometry(QtCore.QRect(570, 390, 401, 51))
+        txtbox.setFont(params.get_font(15))
+        txtbox.setStyleSheet("background-color: rgba(230, 230, 230,0.6) ;\n"
+                                          "border: 5px solid rgba(0,0,0,0) ;\n"
+                                          "bordar-bottom-color:rgba(46,82,101,200) ;\n"
+                                          "color: #14279B ;\n"
+                                          "padding-bottom:7px ;\n"
+                                          "\n"
+                                          "")
+        txtbox.setPlaceholderText("Enter Your Name")
+        txtbox.setText("")
+        txtbox.setObjectName("userNameTxtBox")
+        return txtbox
+
+    def get_password_txtbox(self):
+        txtbox = QtWidgets.QLineEdit(self)
+        txtbox.setGeometry(QtCore.QRect(570, 500, 401, 51))
+        txtbox.setFont(params.get_font(15))
+        txtbox.setStyleSheet("background-color: rgba(230, 230, 230,0.6) ;\n"
+                                          "border: 5px solid rgba(0,0,0,0) ;\n"
+                                          "bordar-bottom-color:rgba(46,82,101,200) ;\n"
+                                          "color: #14279B ;\n"
+                                          "padding-bottom:7px ;")
+        txtbox.setEchoMode(QtWidgets.QLineEdit.Password)
+        txtbox.setPlaceholderText("Enter Your Password")
+        txtbox.setObjectName("passwordTxtBox")
+        return txtbox
+
+    def get_back_button(self):
+        button = QtWidgets.QPushButton(self)
+        button.setGeometry(QtCore.QRect(50, 770, 80, 80))
+        button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        button.setStyleSheet(params.back_button_style)
+        button.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("../storage/Icons/back.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        button.setIcon(icon)
+        button.setIconSize(QtCore.QSize(50, 50))
+        button.setAutoDefault(False)
+        button.setFlat(False)
+        button.setObjectName("pushButton")
+        return button
+
+    def get_show_password_button(self):
+        button = QtWidgets.QPushButton(self)
+        button.setGeometry(QtCore.QRect(920, 500, 51, 51))
+        button.setStyleSheet(params.show_password_button_style)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap("../storage/Icons/showPassword.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        button.setIcon(icon1)
+        button.setIconSize(QtCore.QSize(80, 80))
+        button.setText("")
+        button.setObjectName("showPasswordBtn")
+        button.clicked.connect(self.toggle_visibility)
+        return button
+
+    def get_gender_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(270, 630, 191, 81))
+        label.setFont(params.get_font(30))
+        label.setStyleSheet("color:white;")
+        label.setText("Gender")
+        label.setObjectName("genderLbl")
+        return label
+
+    def get_male_radiobutton(self):
+        rdbtn = QtWidgets.QRadioButton(self)
+        rdbtn.setGeometry(QtCore.QRect(560, 650, 151, 41))
+        rdbtn.setFont(params.get_font(25))
+        rdbtn.setStyleSheet("color:rgb(248, 255, 105);")
+        rdbtn.setText("Male")
+        rdbtn.setObjectName("maleRdBtn")
+        return rdbtn
+    
+    def get_female_radiobutton(self):
+        rdbtn = QtWidgets.QRadioButton(self)
+        rdbtn.setGeometry(QtCore.QRect(810, 650, 221, 41))
+        rdbtn.setFont(params.get_font(25))
+        rdbtn.setStyleSheet("color:rgb(248, 255, 105);")
+        rdbtn.setText("Female")
+        rdbtn.setObjectName("femaleRdBtn")
+        return rdbtn
+
+    def get_invalid_name_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(990, 390, 221, 41))
+        label.setFont(params.get_font(16))
+        label.setStyleSheet("color:rgb(255,69,72);\n")
+        label.setVisible(False)
+        label.setText("Invalid Name")
+        label.setObjectName("invalidNameLbl")
+        return label
+    
+    def get_change_password_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(990, 510, 301, 31))
+        label.setFont(params.get_font(18))
+        label.setStyleSheet("color:rgb(255,69,72);\n")
+        label.setVisible(False)
+        label.setText("Invalid Password")
+        label.setObjectName("changePasswordLbl")
+        return label
+    
+    def get_check_gender_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(990, 510, 301, 330))
+        label.setFont(params.get_font(18))
+        label.setStyleSheet("color:rgb(255,69,72);\n")
+        label.setText("Choose Gender!")
+        label.setObjectName("checkGenderLbl")
+        label.setVisible(False)
+        return label
+    
+    def get_next_button(self):
+        button = QtWidgets.QPushButton(self)
+        button.setGeometry(QtCore.QRect(910, 800, 221, 51))
+        button.setFont(params.get_font(20))
+        button.setStyleSheet(params.next_button_style)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("../storage/Icons/nextPage.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        button.setIcon(icon2)
+        button.setText("Let\'s Go")
+        button.setObjectName("next_pushButton")
+        button.clicked.connect(self.get_user_password)
+        return button
 
     def get_username(self):
         return self.userNameTxtBox.text()
@@ -45,262 +245,16 @@ class SignupWindow(QWidget):
             return False
         else:
             f = Facade()
-            check,player = f.signup_request(self.get_username(), self.get_user_password(), self.get_gender())
-            print("check: ",check)
-            print("player: ",player)
+            check, player = f.signup_request(self.get_username(), self.get_user_password(), self.get_gender())
+            print("check: ", check)
+            print("player: ", player)
             if not check:
                 self.invalidNameLbl.setVisible(True)
                 return False
             else:
+                gui.player_global = player
                 return True
 
-    def __init__(self, parent=None):
-        super(SignupWindow, self).__init__(parent)
-        self.setObjectName("Form")
-        self.resize(1383, 858)
-        font = QtGui.QFont()
-        font.setPointSize(15)
-        self.setFont(font)
-        self.setStyleSheet("")
-        self.userNameLbl = QtWidgets.QLabel(self)
-        self.userNameLbl.setGeometry(QtCore.QRect(240, 390, 291, 71))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(30)
-        self.userNameLbl.setFont(font)
-        self.userNameLbl.setStyleSheet("color: white;\n"
-                                       "background opacity: 0.0;")
-        self.userNameLbl.setScaledContents(False)
-        self.userNameLbl.setObjectName("userNameLbl")
-        self.signUpLbl = QtWidgets.QLabel(self)
-        self.signUpLbl.setGeometry(QtCore.QRect(80, 130, 381, 101))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(50)
-        self.signUpLbl.setFont(font)
-        self.signUpLbl.setStyleSheet("color: white;")
-        self.signUpLbl.setScaledContents(False)
-        self.signUpLbl.setObjectName("signUpLbl")
-        self.passwordLbl = QtWidgets.QLabel(self)
-        self.passwordLbl.setGeometry(QtCore.QRect(250, 510, 271, 51))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(30)
-        self.passwordLbl.setFont(font)
-        self.passwordLbl.setStyleSheet("color: white;")
-        self.passwordLbl.setScaledContents(False)
-        self.passwordLbl.setObjectName("passwordLbl")
-        self.userNameTxtBox = QtWidgets.QLineEdit(self)
-        self.userNameTxtBox.setGeometry(QtCore.QRect(570, 390, 401, 51))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(15)
-        self.userNameTxtBox.setFont(font)
-        self.userNameTxtBox.setStyleSheet("background-color: rgba(230, 230, 230,0.6) ;\n"
-                                          "border: 5px solid rgba(0,0,0,0) ;\n"
-                                          "bordar-bottom-color:rgba(46,82,101,200) ;\n"
-                                          "color: #14279B ;\n"
-                                          "padding-bottom:7px ;\n"
-                                          "\n"
-                                          "")
-        self.userNameTxtBox.setText("")
-        self.userNameTxtBox.setObjectName("userNameTxtBox")
-        self.label_4 = QtWidgets.QLabel(self)
-        self.label_4.setGeometry(QtCore.QRect(0, -30, 2591, 1081))
-        self.label_4.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(32)
-        self.label_4.setFont(font)
-        self.label_4.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.label_4.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.label_4.setStyleSheet("background-image:url(C:/Users/EMAN MOHAMED/Desktop/Sign in/signUp.jpeg);\n"
-                                   "background-repeat: no-repeat;\n"
-                                   "background-size: contain, cover;")
-        self.label_4.setText("")
-        self.label_4.setTextFormat(QtCore.Qt.AutoText)
-        self.label_4.setScaledContents(True)
-        self.label_4.setObjectName("label_4")
-        self.passwordTxtBox = QtWidgets.QLineEdit(self)
-        self.passwordTxtBox.setGeometry(QtCore.QRect(570, 500, 401, 51))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(15)
-        self.passwordTxtBox.setFont(font)
-        self.passwordTxtBox.setStyleSheet("background-color: rgba(230, 230, 230,0.6) ;\n"
-                                          "border: 5px solid rgba(0,0,0,0) ;\n"
-                                          "bordar-bottom-color:rgba(46,82,101,200) ;\n"
-                                          "color: #14279B ;\n"
-                                          "padding-bottom:7px ;")
-        self.passwordTxtBox.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.passwordTxtBox.setObjectName("passwordTxtBox")
-        self.pushButton = QtWidgets.QPushButton(self)
-        self.pushButton.setGeometry(QtCore.QRect(50, 770, 80, 80))
-        self.pushButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton.setStyleSheet("QPushButton{\n"
-                                      "background-color:rgba(152,186,231,0.7);\n"
-                                      "border:none;\n"
-                                      "border-radius: 40px;\n"
-                                      "}\n"
-                                      "QPushButton:hover{\n"
-                                      "background-color:rgb(152,186,231)\n"
-                                      "}\n"
-                                      "\n"
-                                      "\n"
-                                      "")
-        self.pushButton.setText("")
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(
-            "../storage/Icons/back.png"),
-            QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton.setIcon(icon)
-        self.pushButton.setIconSize(QtCore.QSize(50, 50))
-        self.pushButton.setAutoDefault(False)
-        self.pushButton.setFlat(False)
-        self.pushButton.setObjectName("pushButton")
-        self.showPasswordBtn = QtWidgets.QPushButton(self)
-        self.showPasswordBtn.setGeometry(QtCore.QRect(920, 500, 51, 51))
-        self.showPasswordBtn.setStyleSheet("background-color:transparent;\n"
-                                           "background:none;\n"
-                                           "border:none;")
-        self.showPasswordBtn.setText("")
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(
-            "../storage/Icons/showPassword.png"),
-            QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.showPasswordBtn.setIcon(icon1)
-        self.showPasswordBtn.setIconSize(QtCore.QSize(80, 80))
-        self.showPasswordBtn.setObjectName("showPasswordBtn")
-        self.showPasswordBtn.clicked.connect(self.toggle_visibility)
-        self.genderLbl = QtWidgets.QLabel(self)
-        self.genderLbl.setGeometry(QtCore.QRect(270, 630, 191, 81))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(30)
-        self.genderLbl.setFont(font)
-        self.genderLbl.setStyleSheet("QLabel{\n"
-                                     "color:white;\n"
-                                     "}")
-        self.genderLbl.setObjectName("genderLbl")
-        self.maleRdBtn = QtWidgets.QRadioButton(self)
-        self.maleRdBtn.setGeometry(QtCore.QRect(560, 650, 151, 41))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(25)
-        self.maleRdBtn.setFont(font)
-        self.maleRdBtn.setStyleSheet("QRadioButton{\n"
-                                     "color:rgb(248, 255, 105);\n"
-                                     "\n"
-                                     "}\n"
-                                     "")
-        self.maleRdBtn.setObjectName("maleRdBtn")
-        self.femaleRdBtn = QtWidgets.QRadioButton(self)
-        self.femaleRdBtn.setGeometry(QtCore.QRect(810, 650, 221, 41))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(25)
-        self.femaleRdBtn.setFont(font)
-        self.femaleRdBtn.setStyleSheet("color:rgb(248, 255, 105);")
-        self.femaleRdBtn.setObjectName("femaleRdBtn")
-        self.invalidNameLbl = QtWidgets.QLabel(self)
-        self.invalidNameLbl.setGeometry(QtCore.QRect(990, 390, 221, 41))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(16)
-        self.invalidNameLbl.setFont(font)
-        self.invalidNameLbl.setStyleSheet("QLabel{\n"
-                                          "color:rgb(255,69,72);\n"
-                                          "}")
-        self.invalidNameLbl.setVisible(False)
-        self.invalidNameLbl.setObjectName("invalidNameLbl")
-        self.changePasswordLbl = QtWidgets.QLabel(self)
-        self.changePasswordLbl.setGeometry(QtCore.QRect(990, 510, 301, 31))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(18)
-        self.changePasswordLbl.setFont(font)
-        self.changePasswordLbl.setStyleSheet("QLabel{\n"
-                                             "color:rgb(255,69,72);\n"
-                                             "}")
-        self.changePasswordLbl.setVisible(False)
-        self.changePasswordLbl.setObjectName("changePasswordLbl")
-
-        self.checkGenderLbl = QtWidgets.QLabel(self)
-        self.checkGenderLbl.setGeometry(QtCore.QRect(990, 510, 301, 330))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(18)
-        self.checkGenderLbl.setFont(font)
-        self.checkGenderLbl.setStyleSheet("QLabel{\n"
-                                             "color:rgb(255,69,72);\n"
-                                             "}")
-        self.checkGenderLbl.setText("Choose Gender!")
-        self.checkGenderLbl.setVisible(False)
-        self.checkGenderLbl.setObjectName("checkGenderLbl")
-
-        self.pushButton_2 = QtWidgets.QPushButton(self)
-        self.pushButton_2.setGeometry(QtCore.QRect(910, 800, 221, 51))
-        font = QtGui.QFont()
-        font.setFamily("OCR A Extended")
-        font.setPointSize(20)
-        self.pushButton_2.setFont(font)
-        self.pushButton_2.setStyleSheet("QPushButton {\n"
-                                        "    background:linear-gradient(to bottom, #599bb3 5%, #408c99 100%);\n"
-                                        "    background-color:#E6E6E6;\n"
-                                        "    border-radius:8px;\n"
-                                        "    border:1px solid #d6bcd6;\n"
-                                        "    color:#3a8a9e;\n"
-                                        "    text-decoration:none;\n"
-                                        "    text-shadow:0px 1px 0px #e1e2ed;\n"
-                                        "}\n"
-                                        "QPushButton:hover {\n"
-                                        "    background:linear-gradient(to bottom, #bab1ba 5%, #ededed 100%);\n"
-                                        "    background-color:#bab1ba;\n"
-                                        "}\n"
-                                        "QPushButton:active {\n"
-                                        "    position:relative;\n"
-                                        "    top:1px;\n"
-                                        "}")
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(
-            "../storage/Icons/nextPage.png"),
-            QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton_2.setIcon(icon2)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.pushButton_2.clicked.connect(self.get_user_password)
-        self.label_4.raise_()
-        self.userNameLbl.raise_()
-        self.signUpLbl.raise_()
-        self.passwordLbl.raise_()
-        self.userNameTxtBox.raise_()
-        self.passwordTxtBox.raise_()
-        self.pushButton.raise_()
-        self.showPasswordBtn.raise_()
-        self.genderLbl.raise_()
-        self.maleRdBtn.raise_()
-        self.femaleRdBtn.raise_()
-        self.invalidNameLbl.raise_()
-        self.changePasswordLbl.raise_()
-        self.checkGenderLbl.raise_()
-        self.pushButton_2.raise_()
-
-        self.retranslateUi(self)
-        QtCore.QMetaObject.connectSlotsByName(self)
-
-    def retranslateUi(self, Form):
-        _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.userNameLbl.setText(_translate("Form", "User Name"))
-        self.signUpLbl.setText(_translate("Form", "Sign Up"))
-        self.passwordLbl.setText(_translate("Form", "Password"))
-        self.userNameTxtBox.setPlaceholderText(_translate("Form", "Enter Your Name"))
-        self.passwordTxtBox.setPlaceholderText(_translate("Form", "Enter Your Password"))
-        self.genderLbl.setText(_translate("Form", "Gender"))
-        self.maleRdBtn.setText(_translate("Form", "Male"))
-        self.femaleRdBtn.setText(_translate("Form", "Female"))
-        self.invalidNameLbl.setText(_translate("Form", "Invalid Name"))
-        self.changePasswordLbl.setText(_translate("Form", "Invalid Password"))
-        self.pushButton_2.setText(_translate("Form", "Let\'s Go"))
 
 
 class SignupMain(QMainWindow):
@@ -325,5 +279,7 @@ class SignupMain(QMainWindow):
             painter = QPainter(self)
             painter.drawPixmap(frameRect.left(), frameRect.top(), currentFrame)
 
-
+    def refresh(self):
+        self.Window.userNameTxtBox.setText("")
+        self.Window.passwordTxtBox.setText("")
 

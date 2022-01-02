@@ -1,115 +1,145 @@
 from PyQt5 import QtCore, QtWidgets
-from PyQt5 import QtGui
-from PyQt5.QtGui import QMovie, QPainter
-import profile_page
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QProgressBar, QLabel
+from PyQt5.QtGui import QMovie, QPainter, QPixmap
+import gui
+from PyQt5.QtWidgets import QMainWindow, QWidget
+from params import *
 
 
 class GamespaceWindow(QWidget):
 
+    def init_back_lbl(self):
+        label = QtWidgets.QLabel(self.centralwidget)
+        label.setGeometry(QtCore.QRect(0, 0, gamespace_width, gamespace_height))
+        label.setText("")
+        label.setScaledContents(True)
+        label.setObjectName("backlbl")
+        return label
+
+    def init_namelbl(self):
+        namelbl = QtWidgets.QLabel(self.centralwidget)
+        namelbl.setGeometry(QtCore.QRect(50, 250, 131, 31))
+        font = QtGui.QFont()
+        font.setPointSize(17)
+        namelbl.setFont(font)
+        namelbl.setStyleSheet("color:white;")
+        namelbl.setObjectName("namelbl")
+        return namelbl
+
+    def init_avatarlbl(self):
+        avatarlbl = QtWidgets.QLabel(self.centralwidget)
+        avatarlbl.setGeometry(QtCore.QRect(30, 60, 180, 180))
+        avatarlbl.setStyleSheet("background-color:white;\n"
+                                "border-radius:90px;")
+        avatarlbl.setObjectName("avatarlbl")
+        pixmap = QPixmap(gui.player_global.get_avatar())
+        avatarlbl.setPixmap(QPixmap(pixmap))
+        avatarlbl.setScaledContents(True)
+
+        return avatarlbl
+
+    def init_levellbl(self):
+        levellbl = QtWidgets.QLabel(self.centralwidget)
+        levellbl.setGeometry(QtCore.QRect(260, 90, 111, 51))
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        levellbl.setFont(font)
+        levellbl.setStyleSheet("color:white;")
+        levellbl.setObjectName("levellbl")
+        return levellbl
+
+    def init_levelprogress(self):
+        levelprogress = QtWidgets.QProgressBar(self.centralwidget)
+        levelprogress.setGeometry(QtCore.QRect(240, 150, 361, 41))
+        levelprogress.setStyleSheet(level_progress_sheet)
+        levelprogress.setProperty("value", gui.player_global.get_level_progress())
+        levelprogress.setTextVisible(True)
+        levelprogress.setObjectName("levelprogress")
+        return levelprogress
+
+    def init_gamelbl(self):
+        gamelbl = QtWidgets.QLabel(self.centralwidget)
+        gamelbl.setGeometry(QtCore.QRect(20, 310, 1821, 551))
+        font = QtGui.QFont()
+        font.setPointSize(23)
+        gamelbl.setFont(font)
+        gamelbl.setLayoutDirection(QtCore.Qt.LeftToRight)
+        gamelbl.setStyleSheet("background:rgba(85, 170, 255,0.3);")
+        gamelbl.setObjectName("gamelbl")
+        gamelbl.setText("Game ")
+        return gamelbl
+
+    def init_profilebtn(self):
+        profilebtn = QtWidgets.QPushButton(self.centralwidget)
+        profilebtn.setGeometry(QtCore.QRect(760, 140, 181, 51))
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        profilebtn.setFont(font)
+        profilebtn.setStyleSheet("QPushButton{\n"
+                                 "background-color:rgb(85, 170, 255);\n"
+                                 "border-radius:15px;\n"
+                                 "font-color:white;}\n"
+                                 "QPushButton:hover {\n"
+                                 "    background-color: #6fbffc;\n"
+                                 "}"
+                                 )
+        profilebtn.setObjectName("profilebtn")
+        profilebtn.setText("Go To Profile")
+        profilebtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        return profilebtn
+
+    def init_exitbtn(self):
+        exitbtn = QtWidgets.QPushButton(self.centralwidget)
+        exitbtn.setGeometry(QtCore.QRect(1780, 20, 71, 51))
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        exitbtn.setFont(font)
+        exitbtn.setStyleSheet("QPushButton{\n"
+                              "background-color:rgba(245, 98, 3,0.9);\n"
+                              "border-radius:25px;\n"
+                              "color:white;}\n"
+                              "QPushButton:hover {\n"
+                              "    background-color: #e87c35;\n"
+                              "}")
+        exitbtn.setObjectName("exitbtn")
+        exitbtn.setText("Exit")
+        exitbtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        return exitbtn
+
     def __init__(self, parent=None):
         super(GamespaceWindow, self).__init__(parent)
         self.setObjectName("MainWindow")
-        self.resize(2102, 966)
+        self.resize(gamespace_width, gamespace_height)
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(-130, -20, 2591, 1081))
-        self.label.setText("")
-        self.label.setScaledContents(True)
-        self.label.setObjectName("label")
-        self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(30, 60, 180, 180))
-        self.label_2.setStyleSheet("background-color:white;\n"
-                                   "border-radius:90px;")
-        self.label_2.setObjectName("label_2")
-        self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(50, 250, 131, 31))
-        font = QtGui.QFont()
-        font.setPointSize(17)
-        self.label_3.setFont(font)
-        self.label_3.setStyleSheet("color:white;")
-        self.label_3.setObjectName("label_3")
-        self.label_4 = QtWidgets.QLabel(self.centralwidget)
-        self.label_4.setGeometry(QtCore.QRect(260, 90, 111, 51))
-        font = QtGui.QFont()
-        font.setPointSize(18)
-        self.label_4.setFont(font)
-        self.label_4.setStyleSheet("color:white;")
-        self.label_4.setObjectName("label_4")
-        self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
-        self.progressBar.setGeometry(QtCore.QRect(240, 150, 361, 41))
-        self.progressBar.setStyleSheet("QProgressBar:horizontal {\n"
-                                       "border: 1px solid gray;\n"
-                                       "border-radius: 3px;\n"
-                                       "background: white;\n"
-                                       "padding: 3px;\n"
-                                       "text-align: center;\n"
-                                       "margin-right: 4ex;\n"
-                                       "}\n"
-                                       "QProgressBar::chunk:horizontal {\n"
-                                       "background:rgb(241, 236, 83);\n"
-                                       "width: 10px;\n"
-                                       "\n"
-                                       "}")
-        self.progressBar.setProperty("value", 24)
-        self.progressBar.setTextVisible(False)
-        self.progressBar.setObjectName("progressBar")
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(760, 140, 181, 51))
-        font = QtGui.QFont()
-        font.setPointSize(13)
-        self.pushButton.setFont(font)
-        self.pushButton.setStyleSheet("background-color:rgb(85, 170, 255);\n"
-                                      "border-radius:15px;\n"
-                                      "font-color:white;")
-        self.pushButton.setObjectName("pushButton")
-        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_3.setGeometry(QtCore.QRect(1780, 20, 71, 51))
-        font = QtGui.QFont()
-        font.setPointSize(13)
-        self.pushButton_3.setFont(font)
-        self.pushButton_3.setStyleSheet("background-color:rgba(245, 98, 3,0.9);\n"
-                                        "border-radius:25px;\n"
-                                        "color:white;")
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.label_6 = QtWidgets.QLabel(self.centralwidget)
-        self.label_6.setGeometry(QtCore.QRect(20, 310, 1821, 551))
-        font = QtGui.QFont()
-        font.setPointSize(23)
-        self.label_6.setFont(font)
-        self.label_6.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.label_6.setStyleSheet("background:rgba(85, 170, 255,0.3);")
-        self.label_6.setObjectName("label_6")
-
+        self.back_lbl = self.init_back_lbl()
+        self.avatarlbl = self.init_avatarlbl()
+        self.namelbl = self.init_namelbl()
+        self.levellbl = self.init_levellbl()
+        self.levelprogress = self.init_levelprogress()
+        self.profilebtn = self.init_profilebtn()
+        self.exitbtn = self.init_exitbtn()
+        self.gamelbl = self.init_gamelbl()
         self.retranslateUi(self)
         QtCore.QMetaObject.connectSlotsByName(self)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label_2.setText(_translate("MainWindow", "              avatar"))
-        self.label_3.setText(_translate("MainWindow", "Username"))
-        self.label_4.setText(_translate("MainWindow", "Level 1"))
-        self.pushButton.setText(_translate("MainWindow", "Go To Profile"))
-        self.pushButton_3.setText(_translate("MainWindow", "Exit"))
-        self.label_6.setText(_translate("MainWindow", "Game "))
+        MainWindow.setWindowTitle(_translate("MainWindow", gamespace_title))
 
 
 class GamespaceMain(QMainWindow):
     def __init__(self, parent=None):
         super(GamespaceMain, self).__init__(parent)
         self.setGeometry(50, 50, 600, 750)
-        self.setFixedSize(1920, 1080)
+        self.setFixedSize(gamespace_width, gamespace_height)
         self.startUIWindow()
-        self.movie = QMovie("../storage/BackGround/gamespace.jpg")
+        self.movie = QMovie(gamespace_bcg)
         self.movie.frameChanged.connect(self.repaint)
         self.movie.start()
 
     def startUIWindow(self):
         self.Window = GamespaceWindow(self)
-        self.setWindowTitle("My Program")
-        #self.show()
+        self.setWindowTitle(gamespace_title)
 
     def paintEvent(self, event):
         currentFrame = self.movie.currentPixmap()
@@ -119,3 +149,12 @@ class GamespaceMain(QMainWindow):
             painter = QPainter(self)
             painter.drawPixmap(frameRect.left(), frameRect.top(), currentFrame)
 
+    def refresh(self):
+        self.Window.namelbl.setText(gui.player_global.get_name())
+        self.Window.levellbl.setText("Level " + str(gui.player_global.get_level()))
+        pixmap = QPixmap(gui.player_global.get_avatar())
+        self.Window.avatarlbl.setPixmap(QPixmap(pixmap))
+        self.Window.avatarlbl.setScaledContents(True)
+        self.Window.levelprogress.setProperty("value", gui.player_global.get_level_progress())
+        self.Window.levelprogress.setTextVisible(True)
+        print("refresh done")

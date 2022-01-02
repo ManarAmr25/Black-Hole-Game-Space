@@ -5,6 +5,7 @@ from PyQt5.QtGui import QMovie, QPainter, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QWidget, QFileDialog
 
 from auth_proxy.facade import Facade
+import gui
 
 
 class ProfileWindow(QWidget):
@@ -13,17 +14,17 @@ class ProfileWindow(QWidget):
         fname = QFileDialog.getOpenFileName(self, "Open file", "c:\\", "Image files (*.jpg *.jpeg *.png)")
         image_path = fname[0]
         print(image_path)
+        gui.player_global.set_avatar(image_path)
         pixmap = QPixmap(image_path)
-        # pixmap.resize(self.label_2.width(), self.label_2.height())
         self.label_2.setPixmap(QPixmap(pixmap))
         self.label_2.setScaledContents(True)
-        # self.label_2.resize(pixmap.width(), pixmap.height())
         # TODO : copy image to our storage to use it later
 
     def save_name(self):
         self.pushButton_2.setText("Edit")
         print(self.lineEdit.text())
         # f = Facade()  # TODO : facade needs to have more functionality from data base manager
+        gui.player_global.set_name(self.lineEdit.text())  # TODO : only if database check is true
         self.lineEdit.setDisabled(True)
 
     def enable_name(self):
@@ -42,9 +43,6 @@ class ProfileWindow(QWidget):
         if event.key() == QtCore.Qt.Key_Return:
             self.save_name()
 
-    # TODO : needs player object, either as a parameter or a class member
-    def consume_player(self, player):
-        self.lineEdit.setText(player.get_name())
 
     def __init__(self, parent=None):
         super(ProfileWindow, self).__init__(parent)
@@ -413,3 +411,13 @@ class ProfileMain(QMainWindow):
         if frameRect.intersects(event.rect()):
             painter = QPainter(self)
             painter.drawPixmap(frameRect.left(), frameRect.top(), currentFrame)
+
+    def refresh(self):
+        self.Window.lineEdit.setText(gui.player_global.get_name())
+        self.Window.label_12.setText(str(gui.player_global.get_wins()))
+        self.Window.label_13.setText(str(gui.player_global.get_games()))
+        self.Window.label_14.setText(str(gui.player_global.get_daily_challenges()))
+        self.Window.label_15.setText(str(gui.player_global.get_weekly_xp()))
+        pixmap = QPixmap(gui.player_global.get_avatar())
+        self.Window.label_2.setPixmap(QPixmap(pixmap))
+        self.Window.label_2.setScaledContents(True)
