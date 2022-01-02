@@ -40,7 +40,7 @@ class Player(guest.Guest):
         self.achievements = []
 
     @staticmethod
-    def build_player(name, list, gender=False, avatar=None, lvl=1, xp=0, weekly_xp=0, wins=0, games=0, daily_challenges=0):
+    def build_player(name, gender=False, avatar=None, lvl=1, xp=0, weekly_xp=0, wins=0, games=0, daily_challenges=0, list=[]):
         """Build a player with the given parameters. returns none if there are invalid parameters."""
         is_successful = True
         player = Player()
@@ -144,8 +144,8 @@ class Player(guest.Guest):
 
     def set_achievement(self, l):
         if isinstance(l, list) and l is not None:
-             self.achievements = l
-             return True
+            self.achievements = l
+            return True
         return False
 
     def update_achievements(self, type):

@@ -120,7 +120,7 @@ class SigninWindow(QWidget):
 
     def get_back_button(self):
         button = QtWidgets.QPushButton(self)
-        button.setGeometry(QtCore.QRect(50, 790, 81, 81))
+        button.setGeometry(QtCore.QRect(50, 900, 81, 81))
         button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         button.setStyleSheet(params.back_button_style)
         button.setText("")
@@ -147,7 +147,7 @@ class SigninWindow(QWidget):
 
     def get_next_button(self):
         button = QtWidgets.QPushButton(self)
-        button.setGeometry(QtCore.QRect(910, 800, 221, 51))
+        button.setGeometry(QtCore.QRect(910, 650, 221, 51))
         button.setFont(params.get_font(20))
         button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         button.setStyleSheet(params.next_button_style)
@@ -161,20 +161,22 @@ class SigninWindow(QWidget):
 
     def get_invalid_username_label(self):
         label = QtWidgets.QLabel(self)
-        label.setGeometry(QtCore.QRect(990, 390, 221, 41))
-        label.setFont(params.get_font(16))
-        label.setStyleSheet(params.invalid_style)
+        label.setGeometry(QtCore.QRect(990, 400, 401, 51))
+        label.setFont(params.get_font(18))
+        label.setStyleSheet("color:rgb(255,69,72);\n")
         label.setVisible(False)
-        label.setObjectName("invalid_un_label")
+        label.setText("User doesn't exist")
+        label.setObjectName("invalidNameLbl")
         return label
 
     def get_invalid_password_label(self):
         label = QtWidgets.QLabel(self)
-        label.setGeometry(QtCore.QRect(990, 510, 301, 31))
+        label.setGeometry(QtCore.QRect(990, 510, 401, 51))
         label.setFont(params.get_font(18))
-        label.setStyleSheet(params.invalid_style)
+        label.setStyleSheet("color:rgb(255,69,72);\n")
         label.setVisible(False)
-        label.setObjectName("invalid_pw_label")
+        label.setText("Incorrect password")
+        label.setObjectName("changePasswordLbl")
         return label
 
     def get_username(self):
@@ -191,15 +193,17 @@ class SigninWindow(QWidget):
             self.password_lineEdit.setEchoMode(QLineEdit.Normal)
 
     def sign_in_db(self):
-        self.invalid_username_label.setVisible(True)
-        self.invalid_password_label.setVisible(True)
-
-        # TODO : needs facade to determine wrong username or password
+        self.invalid_username_label.setVisible(False)
+        self.invalid_password_label.setVisible(False)
         f = Facade()
         # check > boolean, response > player object
         check, response = f.signin_request(self.get_username(), self.get_user_password())
-        if not check:
-            print("response in gui : ", response)
+        if not check:  # response is an error msg
+            print(response)
+            if response == "Player doesn't exist!":
+                self.invalid_username_label.setVisible(True)
+            elif response == "Wrong password!":
+                self.invalid_password_label.setVisible(True)
             return False
         else:
             gui.player_global = response

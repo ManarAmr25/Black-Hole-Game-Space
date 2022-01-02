@@ -8,6 +8,7 @@ import gamespace
 import start_page
 import profile_page
 import landing_page
+import leaderboard
 from PyQt5 import QtWidgets, QtTest
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
 
@@ -37,9 +38,16 @@ def open_gamespace():
     widget.setCurrentIndex(3)
     game.refresh()
 
+
 def open_profile():
     widget.setCurrentIndex(4)
     profile.refresh()
+
+
+def open_leaderboard():
+    widget.setCurrentIndex(5)
+    leaderboard.refresh()
+
 
 if __name__ == '__main__':
     playlist = QMediaPlaylist()
@@ -51,12 +59,14 @@ if __name__ == '__main__':
     # player.play()
     app = QApplication(sys.argv)
     landing = landing_page.LandingMain()
+    #start widget
     widget = QtWidgets.QStackedWidget()
     w = start_page.StartMain()
     signin = signIn.SigninMain()
     signup = signUp.SignupMain()
     game = gamespace.GamespaceMain()
     profile = profile_page.ProfileMain()
+    leaderboard = leaderboard.LeaderboardMain()
     w.Window.signin_btn.clicked.connect(open_signin)
     w.Window.signup_btn.clicked.connect(open_signup)
     w.Window.guest_btn.clicked.connect(open_gamespace)
@@ -70,13 +80,18 @@ if __name__ == '__main__':
     #gamespace navigation btns
     game.Window.profilebtn.clicked.connect(open_profile)
     game.Window.exitbtn.clicked.connect(open_startpage)
+    game.Window.leaderboardbtn.clicked.connect(open_leaderboard)
     #profile navigation btns
-    profile.Window.pushButton_4.clicked.connect(open_gamespace)
-    widget.addWidget(w)
-    widget.addWidget(signin)
-    widget.addWidget(signup)
-    widget.addWidget(game)
-    widget.addWidget(profile)
+    profile.Window.back_button.clicked.connect(open_gamespace)
+    #leaderboard navigation
+    leaderboard.Window.back_button.clicked.connect(open_gamespace)
+
+    widget.addWidget(w)  # 0
+    widget.addWidget(signin)  # 1
+    widget.addWidget(signup)  # 2
+    widget.addWidget(game)  # 3
+    widget.addWidget(profile)  # 4
+    widget.addWidget(leaderboard)  # 5
 
     loop = QEventLoop()
     t = QElapsedTimer()
@@ -89,6 +104,8 @@ if __name__ == '__main__':
 
     # player.stop()
     del landing
-    widget.showFullScreen()
+    # widget.showFullScreen()
+    widget.show()
+    widget.move(10,10)
     # widget.update()
     sys.exit(app.exec_())

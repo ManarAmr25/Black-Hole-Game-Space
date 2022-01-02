@@ -87,6 +87,25 @@ class GamespaceWindow(QWidget):
         profilebtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         return profilebtn
 
+    def init_connect4btn(self):
+        connect4btn = QtWidgets.QPushButton(self.centralwidget)
+        connect4btn.setGeometry(QtCore.QRect(30, 320, 181, 51))
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        connect4btn.setFont(font)
+        connect4btn.setStyleSheet("QPushButton{\n"
+                                 "background-color:rgb(85, 170, 255);\n"
+                                 "border-radius:15px;\n"
+                                 "font-color:white;}\n"
+                                 "QPushButton:hover {\n"
+                                 "    background-color: #6fbffc;\n"
+                                 "}"
+                                 )
+        connect4btn.setObjectName("connect4btn")
+        connect4btn.setText("Connect 4")
+        connect4btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        return connect4btn
+
     def init_exitbtn(self):
         exitbtn = QtWidgets.QPushButton(self.centralwidget)
         exitbtn.setGeometry(QtCore.QRect(1780, 20, 71, 51))
@@ -105,6 +124,25 @@ class GamespaceWindow(QWidget):
         exitbtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         return exitbtn
 
+    # TODO : temporary
+    def init_leaderboardbtn(self):
+        leaderboardbtn = QtWidgets.QPushButton(self.centralwidget)
+        leaderboardbtn.setGeometry(QtCore.QRect(1650, 20, 71, 51))
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        leaderboardbtn.setFont(font)
+        leaderboardbtn.setStyleSheet("QPushButton{\n"
+                                     "background-color:rgba(245, 98, 3,0.9);\n"
+                                     "border-radius:25px;\n"
+                                     "color:white;}\n"
+                                     "QPushButton:hover {\n"
+                                     "    background-color: #e87c35;\n"
+                                     "}")
+        leaderboardbtn.setObjectName("leaderboardbtn")
+        leaderboardbtn.setText("leaderboard")
+        leaderboardbtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        return leaderboardbtn
+
     def __init__(self, parent=None):
         super(GamespaceWindow, self).__init__(parent)
         self.setObjectName("MainWindow")
@@ -118,7 +156,9 @@ class GamespaceWindow(QWidget):
         self.levelprogress = self.init_levelprogress()
         self.profilebtn = self.init_profilebtn()
         self.exitbtn = self.init_exitbtn()
+        self.leaderboardbtn = self.init_leaderboardbtn()
         self.gamelbl = self.init_gamelbl()
+        self.connect4 = self.init_connect4btn()
         self.retranslateUi(self)
         QtCore.QMetaObject.connectSlotsByName(self)
 

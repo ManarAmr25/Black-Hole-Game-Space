@@ -52,10 +52,13 @@ def init_font_start(size, isItalic):
     return font
 
 
-def get_font(size):
+def get_font(size, weight=40, is_bold=False, is_italic=False):
     font = QtGui.QFont()
     font.setFamily("OCR A Extended")
     font.setPointSize(size)
+    font.setWeight(weight)
+    font.setBold(is_bold)
+    font.setItalic(is_italic)
     return font
 
 
@@ -132,21 +135,166 @@ level_progress_sheet = ("QProgressBar:horizontal {\n"
                         "\n"
                         "}")
 startpg_buttons_sheet = ("QPushButton{\n"
-                           "    box-shadow: -1px 0px 6px 0px #F0D9FF;\n"
-                           "    background-color:#6E3CBC;\n"
-                           "    border-radius:38px;\n"
-                           "    border:4px solid #F0D9FF;\n"
-                           "    cursor:pointer;\n"
-                           "    color:#ffffff;\n"
-                           "    font-size:26px;\n"
-                           "    font-family:OCR A Extended;\n"
-                           "    font-style:italic;\n"
-                           "    font-weight:bold;\n"
-                           "    padding:22px 15px;\n"
-                           "}\n"
-                           "QPushButton:hover {\n"
-                           "    background-color:#BFA2DB;\n"
-                           "}")
+                         "    box-shadow: -1px 0px 6px 0px #F0D9FF;\n"
+                         "    background-color:#6E3CBC;\n"
+                         "    border-radius:38px;\n"
+                         "    border:4px solid #F0D9FF;\n"
+                         "    cursor:pointer;\n"
+                         "    color:#ffffff;\n"
+                         "    font-size:26px;\n"
+                         "    font-family:OCR A Extended;\n"
+                         "    font-style:italic;\n"
+                         "    font-weight:bold;\n"
+                         "    padding:22px 15px;\n"
+                         "}\n"
+                         "QPushButton:hover {\n"
+                         "    background-color:#BFA2DB;\n"
+                         "}")
 landing_title = "Black Hole"
 gamespace_title = "Home"
 startpage_title = "Welcome Alien"
+
+profile_title_style = "border-left: 10px solid  rgb(255, 255, 255);\nbackground-color: rgba(184, 228, 240," \
+                      "0.3);\ncolor: rgb(255, 255, 255); "
+
+profile_pic_style = "border-radius: 7px;\nbackground-color: rgba(0, 0, 49,0.6);\nborder : 2px groove rgb(157, 158, " \
+                    "253);\n "
+
+profile_change_pic_style = "QPushButton{\n" \
+                           "color:rgb(248, 255, 105);\n" \
+                           "font: 11pt \"OCR A Extended\";\n" \
+                           "border-radius: 1px;\n" \
+                           "border-bottom: 4px solid rgba(152, 186, 231,0);\n" \
+                           "font-weight: 500;}\n" \
+                           "QPushButton:hover{\n" \
+                           "color: rgb(9, 6, 75);\n" \
+                           "background-color: rgba(152, 186, 231,0.7);\n" \
+                           "border-bottom: 4px solid rgb(152, 186, 231);\n" \
+                           "font: 11pt \"OCR A Extended\";\n" \
+                           "box-sizing: border-box;\n" \
+                           "font-weight: 500;\n}"
+
+profile_label_style = "color: rgb(255, 255, 255);\n" \
+                      "border-left: 5px solid  rgb(255, 255, 255);\n" \
+                      "border-radius : 10px;\n"
+
+profile_name_lineEdit_disabled = "QLineEdit{\n" \
+                                 "    color: rgb(255, 255, 255);\n" \
+                                 "    background-color: rgba(230, 230, 230,0) ;\n" \
+                                 "    font: 20pt \"OCR A Extended\";\n" \
+                                 "    border-radius: 1px;\n" \
+                                 "    border-bottom: 5px solid rgba(255,255,255,0);\n" \
+                                 "}\n" \
+                                 "QLineEdit:focus{\n" \
+                                 "    background-color: rgba(230, 230, 230,0.6) ;\n" \
+                                 "    border-bottom: 5px solid rgba(255,255,255,1);\n" \
+                                 "}\n"
+
+profile_name_lineEdit_enabled = "    color: rgb(255, 255, 255);\n" \
+                                "    font: 20pt \"OCR A Extended\";\n" \
+                                "    border-radius: 1px;\n" \
+                                "    background-color: rgba(230, 230, 230,0.6) ;\n" \
+                                "    border-bottom: 5px solid rgba(255,255,255,1);\n"
+
+profile_button_style = "QPushButton{\n" \
+                       "    color:rgb(248, 255, 105);\n" \
+                       "    font: 11pt \"OCR A Extended\";\n" \
+                       "    border-radius: 1px;\n" \
+                       "    border-bottom: 4px solid rgba(152, 186, 231,0);\n" \
+                       "    font-weight: 500;\n" \
+                       "}\n" \
+                       "QPushButton:hover{\n" \
+                       "    color: rgb(9, 6, 75);\n" \
+                       "    background-color: rgba(152, 186, 231,0.7);\n" \
+                       "    border-bottom: 4px solid rgb(152, 186, 231);\n" \
+                       "    font: 11pt \"OCR A Extended\";\n" \
+                       "    box-sizing: border-box;\n" \
+                       "    font-weight: 500;\n" \
+                       "}"
+
+profile_frame_style = "border-left : 7px solid rgb(255, 255, 255);\n" \
+                      "background-color : rgba(184, 228, 240,0.3); "
+
+profile_stats_label_style = "color: rgb(0, 13, 46);\n"\
+                                   "border : none;\n"\
+                                   "background:none;\n"\
+                                   "font-size : 20px;\n"\
+                                   "font-weight : 600;"
+
+profile_num_label_style = "color: rgb(248, 255, 105);\n"\
+                                    "border : none;\n"\
+                                    "background:none;\n"\
+                                    "font-size : 19px;\n"\
+                                    "font-weight : 500;"
+#leader board
+leaderboard_tabel_style = "QTableWidget {background-color:transparent; font: 15pt \"OCR A Extended\"; border: none;}"\
+            "QHeaderView {border:none; background-color:transparent; font: 25pt \"OCR A Extended\";}"\
+            "QHeaderView::focus {border:none}"\
+            "QHeaderView::section {background-color:transparent; border-bottom: 1px solid #ffffff; color: #ffffff}"\
+            "QHeaderView::section::horizontal {background-color:rgba(127, 124, 130, 0.5);}"\
+            "QTableCornerButton::section {background-color:rgba(127, 124, 130, 0.5);}"\
+            "QTableView::item {border-bottom: 1px solid #ffffff; color: #ffffff; text-align: center;}"\
+            "QTableView::item::hover{background-color:#BFA2DB; color:blue;}"
+
+leaderboard_frame_style = "background-color: rgba(110, 60, 188,0.4);  box-shadow: 20px 20px white; border-radius: 5px"
+#6E3CBC
+#d98adb
+
+#achievements
+achievment_table_style = ("    QTableWidget {\n"
+                          "        background-color: transparent; \n"
+                          "        border-radius: 10px; border:none\n"
+                          "    }\n"
+                          "\n"
+                          "    QTableWidget::item {\n"
+                          "        color:rgb(255, 255, 255);                    \n"
+                          "        background-color: rgba(110, 60, 188,0.4);\n"
+                          "        margin-top: 5px;          \n"
+                          "        border-radius: 9px;\n"
+                          "        padding-left: 5px;\n"
+                          "    }\n"
+                          "\n"
+                          "    QTableWidget::item:hover {\n"
+                          "        background-color: #BFA2DB;\n"
+                          "        color: blue;\n"
+                          "    }"
+                          "QHeaderView {border:none; background-color:rgba(127, 124, 130, 0.5); font: 25pt \"OCR A Extended\";}"
+                          "QHeaderView::focus {border:none}"
+                          "QHeaderView::section {background-color:transparent; border-bottom: 1px solid #ffffff; color: #ffffff}"
+                          "QHeaderView::section::horizontal {background-color:rgba(127, 124, 130, 0.5);}""")
+scroll_style = (""" QScrollBar:vertical {
+                                                                 border: 2px solid grey;
+                                                                 background: transparent;
+                                                                 width: 15px;
+                                                                 margin: 22px 0 22px 0;
+                                                             }
+                                                             QScrollBar::handle:vertical {
+                                                                 background: rgba(255,255,255,0.8);
+                                                                 min-height: 20px;
+                                                                 border-radius : 5% ;
+                                                             }
+                                                             QScrollBar::add-line:vertical {
+                                                                 border: 2px solid grey;
+                                                                 background: #BFA2DB;
+                                                                 height: 20px;
+                                                                 subcontrol-position: bottom;
+                                                                 subcontrol-origin: margin;
+                                                             }
+
+                                                             QScrollBar::sub-line:vertical {
+                                                                 border: 2px solid grey;
+                                                                 background: #BFA2DB;
+                                                                 height: 20px;
+                                                                 subcontrol-position: top;
+                                                                 subcontrol-origin: margin;
+                                                             }
+                                                             QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+                                                                 border: 2px solid grey;
+                                                                 width: 3px;
+                                                                 height: 3px;
+                                                                 background: white;
+                                                             }
+
+                                                             QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+                                                                 background: none;
+ }""")

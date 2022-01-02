@@ -1,4 +1,5 @@
-from achievements import AchievementInterface
+from models.achievements import AchievementInterface
+
 
 class XpAchievement(AchievementInterface):
 
@@ -12,7 +13,6 @@ class XpAchievement(AchievementInterface):
     def parseDescribtion(self):
         resArr = self.describtion.split()
         self.max_achievement = int(resArr[-1])  # last index is max number
-
 
     def update(self, achievement_type):
         if achievement_type == "xp" and self.curr_player._xp >= self.max_achievement:

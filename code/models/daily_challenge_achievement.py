@@ -1,4 +1,5 @@
-from achievements import AchievementInterface
+from models.achievements import AchievementInterface
+
 
 class DailyChallengeAchievement(AchievementInterface):
 
