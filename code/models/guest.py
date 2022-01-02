@@ -36,18 +36,18 @@ class Guest:
 
     def __init__(self):
         self._name = "Guest"
-        self._avatar = None
+        self._avatar = "..\\storage\\icons\\default.jpg"
         self._lvl = 1
         self._xp = 0
         self._max_lvl_xp = 50
 
     @staticmethod
-    def build_player(name, gender=False, avatar=None, lvl=1, xp=0, weekly_xp=0, wins=0, games=0, daily_challenges=0):
+    def build_guest(name, gender=False, lvl=1, xp=0):
         """Build a guest player with the given parameters. returns none if there are invalid parameters."""
         is_successful = True
         guest = Guest()
         is_successful = is_successful and guest.set_name(name)
-        is_successful = is_successful and guest.set_avatar(avatar)
+        # is_successful = is_successful and guest.set_avatar(avatar)
         is_successful = is_successful and guest.set_level_xp(lvl, xp)
         return guest if is_successful else None
 
@@ -79,6 +79,10 @@ class Guest:
     def get_xp(self):
         """Returns Player's xp points withing the current level"""
         return self._xp
+
+    def get_level_progress(self):
+        """Returns Player's level progress percentage as a number from 0 to 100"""
+        return 100*self._xp/self._max_lvl_xp
 
     def increase_xp(self, xp):
         """Takes xp and adds them to Player's current xp points."""
