@@ -18,6 +18,15 @@ CREATE TABLE user_info(
     daily_ch BIGINT NOT NULL DEFAULT 0
 );
 
+CREATE TABLE achievements(
+name VARCHAR(50) ,
+description VARCHAR(500) ,
+checked BIT NOT NULL DEFAULT 0,
+type varchar(50),
+PRIMARY KEY(name,description),
+FOREIGN KEY(name) REFERENCES user_info(name)
+);
+
 INSERT INTO user_info(name, password, salt) VALUES("GameAd","password", "salt");
 
 CREATE TABLE quotes(
