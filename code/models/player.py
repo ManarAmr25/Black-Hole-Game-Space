@@ -37,9 +37,10 @@ class Player(guest.Guest):
         self._wins = 0
         self._games = 0
         self._daily_challenges = 0
+        self.achievements = []
 
     @staticmethod
-    def build_player(name, gender=False, avatar=None, lvl=1, xp=0, weekly_xp=0, wins=0, games=0, daily_challenges=0):
+    def build_player(name, list, gender=False, avatar=None, lvl=1, xp=0, weekly_xp=0, wins=0, games=0, daily_challenges=0):
         """Build a player with the given parameters. returns none if there are invalid parameters."""
         is_successful = True
         player = Player()
@@ -51,6 +52,7 @@ class Player(guest.Guest):
         is_successful = is_successful and player.set_wins(wins)
         is_successful = is_successful and player.set_games(games)
         is_successful = is_successful and player.set_daily_challenges(daily_challenges)
+        is_successful = is_successful and player.set_achievement(list)
         return player if is_successful else None
 
     def set_name(self, name):
@@ -67,8 +69,11 @@ class Player(guest.Guest):
         """
         Sets Player's avatar image, default = None.
         """
-        if avatar is None or isinstance(avatar, str) and len(avatar) > 0:
+        if avatar is not None or isinstance(avatar, str) and len(avatar) > 0:
             self._avatar = avatar
+            return True
+        elif avatar is None:
+            self._avatar = "..\\storage\\icons\\default.jpg"
             return True
         else:
             return False
@@ -136,3 +141,15 @@ class Player(guest.Guest):
 
     def increment_games(self):
         self._games += 1
+
+    def set_achievement(self, l):
+        if isinstance(l, list) and l is not None:
+             self.achievements = l
+             return True
+        return False
+
+    def update_achievements(self, type):
+        i = 0
+        while i != len(self.achievements):
+            self.achievements[i].update(type)
+            i = i + 1
