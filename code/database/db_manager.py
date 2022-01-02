@@ -142,6 +142,7 @@ class DBManager:
     def get_player(self, user_name):
         if not isinstance(user_name,str) or len(user_name) == 0:
             return False, None
+        list = get_achievement(user_name)
         try:
             self.__cursor.execute(f"SELECT * FROM user_info WHERE name = '{str(user_name)}'")
             res = self.__cursor.fetchall()
@@ -151,6 +152,7 @@ class DBManager:
             gender = True if player_data[3] == 1 else False
             player = Player.build_player(
                 player_data[0],  # name
+                list,  # list of achievements
                 gender,  # gender
                 player_data[4],  # avatar
                 player_data[5],  # level
@@ -172,13 +174,14 @@ class DBManager:
         if not isinstance(user_name,str) or len(user_name) == 0 or not isinstance(password,str) or len(password) == 0 or not isinstance(salt,str) or len(salt) == 0 or not isinstance(gender,bool):
             return False, None
         gend = 1 if gender else 0
-
+        list = get_achievement(user_name)
         try:
             self.__cursor.execute(
                 f"INSERT INTO user_info(name, password, salt, gender) VALUES('{str(user_name)}', '{str(password)}','{str(salt)}', {gend})")
             self.__connection.commit()
             player = Player.build_player(
                 user_name,  # name
+                list, # list of achievements
                 gender  # gender
             )
             if player is None:
@@ -237,3 +240,33 @@ class DBManager:
         except Exception as e:
             print(e)
             return False
+
+    # get all achievements
+    def get_achievement(self, user_name):
+        self.__cursor.execute(f"SELECT * FROM achievements WHERE name = '{str(user_name)}'")
+        res = self.__cursor.fetchall()
+        i = 0
+        list = []
+        while i != len(res):
+            achievement_data = res[i]
+            if achievement_data[3] == "xp":
+                list.add(xp_achievement(achievement_data[1], achievement_data[2]))
+            elif achievement_data[3] == "wins":
+                list.add(wins_achievement(achievement_data[1], achievement_data[2]))
+            elif achievement_data[3] == "level":
+                list.add(level_achievement(achievement_data[1], achievement_data[2]))
+            elif achievement_data[3] == "daily challenge":
+                list.add(daily_challenge_achievement(achievement_data[1], achievement_data[2]))
+            # TODO: tournament
+            i = i+1
+        return list
+
+
+    def update_db_achievements(self, list, user_name):
+        i = 0
+        while i < len(list):
+            ach = list[i]
+            self.__cursor.execute(
+                f"UPDATE achievements SET checked = {ach.checked} WHERE name = '{str(user_name)}' and checked != {ach.checked}")
+            self.__connection.commit()
+            i = i + 1
