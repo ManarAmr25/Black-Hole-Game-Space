@@ -1,20 +1,66 @@
-import sys
 import time
-
 import numpy as np
-import pygame
 import winsound
-from heuristic import *
-import minimax
-import pruning
-import tkinter as tk
-from tkinter import simpledialog, messagebox
+from PyQt5 import QtCore, QtTest
+from games.connect4 import pruning, minimax
+from games.connect4.heuristic import *
+from PyQt5 import QtWidgets
+from PyQt5.QtGui import QImage, QPainter
+from PyQt5.QtWidgets import QApplication, QWidget
+import pygame
+import sys
+
+
+class ImageWidget(QWidget, QtCore.QObject):
+    def __init__(self, surface, parent=None):
+        super(ImageWidget, self).__init__(parent)
+        self.w = surface.get_width()
+        self.h = surface.get_height()
+        self.data = surface.get_buffer().raw
+        self.image = QImage(self.data, self.w, self.h, QImage.Format_RGB32)
+        self.surface =surface
+        self.setMouseTracking(True)
+        self.loop = True
+        self.xpos =0
+        self.ypos =0;
+    def mouseMoveEvent(self, event):
+        self.loop = True
+        self.xpos = event.x()
+        self.ypos =event.y()
+
+    def mousePressEvent(self, event):
+        self.loop = False
+
+    def update(self, surface):
+        self.data = surface.get_buffer().raw
+        self.image = QImage(self.data, self.w, self.h, QImage.Format_RGB32)
+        self.paintEvent(event=[])
+
+
+    def paintEvent(self, event):
+        qp = QPainter()
+        qp.begin(self)
+        qp.drawImage(0, 0, self.image)
+        qp.end()
+
+
+class MainWindow(QtWidgets.QMainWindow):
+    def __init__(self, surface, parent=None):
+        super(MainWindow, self).__init__(parent)
+        self.setFixedWidth(width)
+        self.setFixedHeight(height)
+        self.surface = surface
+        self.img = ImageWidget(self.surface)
+        self.setCentralWidget(self.img)
+    def upd(self):
+        global screen
+        self.img.update(screen)
 
 # size of circle and dimensions of board
 SQUARESIZE = 100
 ROWS = 6
 COLUMNS = 7
-K = 1 #max depth
+K = 3 #max depth
 P = 0 #pruning option
 RADIUS = SQUARESIZE // 2 - 5
 # Colors
@@ -25,29 +71,6 @@ BOARD_COLOR = (88, 140, 126)
 width = COLUMNS * SQUARESIZE
 height = (ROWS + 1) * SQUARESIZE
 size = (width, height)
-
-
-# set some parameters in a pop up dialog
-dialog = tk.Tk()
-with_pruning = tk.IntVar()  # 1 if pruning is used, 0 otherwise
-
-def confirm():
-    global  K, P
-    K = int(k_entry.get())
-    P = with_pruning.get()
-    print(K, P)
-    dialog.destroy()
-
-# pop-up window to take K & play with/without pruning
-label = tk.Label(dialog, text="Enter k : ")
-label.pack()
-k_entry = tk.Entry(dialog)
-k_entry.pack()
-check_pruning = tk.Checkbutton(dialog, text='With Pruning', variable=with_pruning, onvalue=1, offvalue=0)
-check_pruning.pack()
-ok_button = tk.Button(dialog, text="Start", command = confirm)
-ok_button.pack()
-dialog.mainloop()
 
 # initialize BOARD
 board = np.zeros((ROWS, COLUMNS), dtype=int)
@@ -68,7 +91,7 @@ def draw_board(board):
         for c in range(COLUMNS):
             draw_rect(r, c)
             draw_circle(r, c, COLOR[board[r][c]])
-    pygame.display.update()
+
 
 #places a piece in the board array for the current turn
 def put_piece(board, last_in_row, c, turn):
@@ -115,65 +138,68 @@ def update_score(board, turn):
                 score += 1
 
     return score
-
-
-# initializing empty board
-pygame.init()
-screen = pygame.display.set_mode(size)
-draw_board(board)
-pygame.display.update()
-
-game_over = False
-scores = [0, 0] #scores[0] > computer, scores[1] > human
-# keep track of last row in each col
-last_in_row = np.zeros(COLUMNS, dtype=int)
-turn = 0 #computer always goes first
-while not game_over:
-    if check_end(last_in_row): #check game end
-        game_over = True
-        print("End")
-
-    elif turn == 0: #computer's turn
-        if P == 1:  # with pruning
-            start_time = time.time()
-            best_move = pruning.decision(board, last_in_row, K)
-            total_time = int((time.time() - start_time) * 1000)
-            print("time in ms {}".format(total_time))
-        else:  # without pruning
-            start_time = time.time()
-            best_move = minimax.decision(board, last_in_row, K)
-            total_time = int((time.time() - start_time) * 1000)
-            print("time in ms {}".format(total_time))
-        put_piece(board, last_in_row, best_move, turn + 1)
-        winsound.PlaySound('mixkit-small-hit-in-a-game-2072.wav', winsound.SND_ASYNC)
+screen =None
+def start():
+    if __name__ == '__main__':
+        pygame.init()
+        global  screen
+        screen = pygame.Surface((width, height))
+        game_over = False
+        scores = [0, 0]  # scores[0] > computer, scores[1] > human
+        # keep track of last row in each col
+        last_in_row = np.zeros(COLUMNS, dtype=int)
+        turn = 0  # computer always goes first
+        #put_piece(board, last_in_row, 3, 1)
         draw_board(board)
-        scores[turn] = update_score(board, turn + 1)
-        print(scores)
-        turn = (turn + 1) % 2
-    else:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-            if event.type == pygame.MOUSEMOTION:
-                pygame.draw.rect(screen, COLOR[0], (0, 0, width, SQUARESIZE))
-                posx = event.pos[0]
-                col = posx // SQUARESIZE
-                draw_circle(-1, col, COLOR[turn + 1])
-                pygame.display.update()
+        app = QApplication(sys.argv)
+        w = MainWindow(screen)
+        w.show()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                # human plays
-                posx = event.pos[0]
-                col = posx // SQUARESIZE
-                if not put_piece(board, last_in_row, col, turn + 1):
-                   continue
-
-
+        while not game_over:
+            if check_end(last_in_row):  # check game end
+                game_over = True
+                print("End")
+            elif turn == 0:  # computer's turn
+                if P == 1:  # with pruning
+                    start_time = time.time()
+                    best_move = pruning.decision(board, last_in_row, K)
+                    total_time = int((time.time() - start_time) * 1000)
+                else:  # without pruning
+                    start_time = time.time()
+                    best_move = minimax.decision(board, last_in_row, K)
+                    total_time = int((time.time() - start_time) * 1000)
+                put_piece(board, last_in_row, best_move, turn + 1)
                 winsound.PlaySound('mixkit-small-hit-in-a-game-2072.wav', winsound.SND_ASYNC)
                 draw_board(board)
+                w.upd()
                 scores[turn] = update_score(board, turn + 1)
-                print(scores)
                 turn = (turn + 1) % 2
-                break
-# score pop-up window
-messagebox.showinfo("showinfo", "Computer : {} , human : {}".format(scores[0], scores[1]))
+                w.img.setMouseTracking(True)
+                w.img.loop = True
+            else:
+                while w.img.loop:
+                    pygame.draw.rect(screen, COLOR[0], (0, 0, width, SQUARESIZE))
+                    posx = w.img.xpos
+                    col = posx // SQUARESIZE
+                    draw_circle(-1, col, COLOR[turn + 1])
+                    w.upd()
+                    w.repaint()
+                    QtTest.QTest.qWait(100)
+                    if not w.img.loop:
+                        break
+                w.img.setMouseTracking(False)
+                # human plays
+                posx = w.img.xpos
+                col = posx // SQUARESIZE
+                if not put_piece(board, last_in_row, col, turn + 1):
+                    w.img.setMouseTracking(True)
+                    continue
+                winsound.PlaySound('mixkit-small-hit-in-a-game-2072.wav', winsound.SND_ASYNC)
+                draw_board(board)
+                w.upd()
+                w.repaint()
+                scores[turn] = update_score(board, turn + 1)
+                turn = (turn + 1) % 2
+        app.exec_()
+
+start()

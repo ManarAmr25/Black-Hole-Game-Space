@@ -1,5 +1,5 @@
 import sys
-from heuristic import *
+from games.connect4.heuristic import *
 from pptree import *
 from queue import PriorityQueue
 
