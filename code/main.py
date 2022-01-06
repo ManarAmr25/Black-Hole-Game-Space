@@ -1,4 +1,3 @@
-from models import player, stats
 from database import db_manager
 import os
 
@@ -10,7 +9,7 @@ p.increase_xp(0)
 print(p.get_level())
 '''
 
-db = db_manager.DBManager()
+'''db = db_manager.DBManager()
 print(db.connect())
 print(db.get_quote())
 print(db.get_quote())
@@ -22,3 +21,8 @@ salt = b'hello'  # Remember this
 print(type(salt))
 print(db.add_player("test_player2", salt, True))
 
+'''
+
+string = "hi\\bye\\.txt"
+print(string)
+print(string.replace('\\', '\\\\'))

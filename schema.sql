@@ -18,15 +18,6 @@ CREATE TABLE user_info(
     daily_ch BIGINT NOT NULL DEFAULT 0
 );
 
-CREATE TABLE achievements(
-name VARCHAR(50) ,
-description VARCHAR(500) ,
-checked BIT NOT NULL DEFAULT 0,
-type varchar(50),
-PRIMARY KEY(name,description),
-FOREIGN KEY(name) REFERENCES user_info(name)
-);
-
 INSERT INTO user_info(name, password, salt) VALUES("GameAd","password", "salt");
 
 CREATE TABLE quotes(
@@ -42,3 +33,27 @@ INSERT INTO quotes(quote) VALUES
 ("The harder you have to try, the more points you deserve!"),
 ("Welcome back , we are very happy to see you");
 
+
+CREATE TABLE game_achievements(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    description VARCHAR(500) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    goal INT
+);
+
+CREATE TABLE player_achievements(
+	player_name VARCHAR(50),
+    achievement_id INT,
+    checked BIT NOT NULL DEFAULT 0,
+    PRIMARY KEY(player_name, achievement_id), 
+    CONSTRAINT x FOREIGN KEY(achievement_id) REFERENCES game_achievements(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT y FOREIGN KEY(player_name) REFERENCES user_info(name) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+INSERT INTO game_achievements(description, type, goal) VALUES
+("reach 5 xp in this level", "xp", 5),
+("win 2 times", "wins", 2),
+("reach level 2", "level", 2),
+("achieve 2 daily challenges", "daily challenge", 2),
+("reach 10 xp in this level", "xp", 10);

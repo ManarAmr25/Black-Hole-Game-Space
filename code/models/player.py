@@ -97,21 +97,21 @@ class Player(guest.Guest):
 
     def set_wins(self, wins):
         if isinstance(wins, int) and wins >= 0:
-            self._weekly_xp = wins
+            self._wins = wins
             return True
         else:
             return False
 
     def set_games(self, games):
         if isinstance(games, int) and games >= 0:
-            self._weekly_xp = games
+            self._games = games
             return True
         else:
             return False
 
     def set_daily_challenges(self, d_ch):
         if isinstance(d_ch, int) and d_ch >= 0:
-            self._weekly_xp = d_ch
+            self._daily_challenges = d_ch
             return True
         else:
             return False
@@ -132,8 +132,12 @@ class Player(guest.Guest):
     def get_daily_challenges(self):
         return self._daily_challenges
 
+    def get_achievements(self):
+        return self.achievements
+
     def increase_weekly_xp(self, xp):
         if isinstance(xp, int) and xp >= 0:
+            print("weekly xp is increased by ", xp)
             self._weekly_xp += xp
 
     def increment_wins(self):
@@ -142,14 +146,12 @@ class Player(guest.Guest):
     def increment_games(self):
         self._games += 1
 
-    def set_achievement(self, l):
-        if isinstance(l, list) and l is not None:
-            self.achievements = l
+    def set_achievement(self, achievements_list):
+        if isinstance(achievements_list, list) and achievements_list is not None:
+            self.achievements = achievements_list
             return True
         return False
 
-    def update_achievements(self, type):
-        i = 0
-        while i != len(self.achievements):
-            self.achievements[i].update(type)
-            i = i + 1
+    def update_achievements(self, achievement_type):
+        for achievement in self.achievements:
+            achievement.update(achievement_type, self)

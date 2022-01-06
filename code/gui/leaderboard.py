@@ -1,17 +1,10 @@
-import sys
-import time
-from PyQt5 import QtCore, QtWidgets, Qt
+from PyQt5 import QtCore, QtWidgets
 from PyQt5 import QtGui
-from PyQt5.QtCore import QUrl, QSize
 from PyQt5.QtGui import QMovie, QPainter
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QProgressBar, QLabel, QLineEdit, \
-    QGraphicsDropShadowEffect
+from PyQt5.QtWidgets import QMainWindow, QWidget, QGraphicsDropShadowEffect
 
-import gui
 import params
-from auth_proxy.facade import Facade
-from gamespace import GamespaceMain
+from backend_layer.facade import Facade
 
 
 class LeaderboardWindow(QWidget):
@@ -28,7 +21,7 @@ class LeaderboardWindow(QWidget):
 
         self.tableWidget = self.get_table()
         #self.read_list([("player 2", "20"),("player 2", "20"),("player 2", "20"),("player 2", "20"),])
-        self.read_list([("player 1", "10"),
+        '''self.read_list([("player 1", "10"),
                         ("player 2", "20"),
                         ("player 3", "30"),
                         ("player 4", "40"),
@@ -51,7 +44,7 @@ class LeaderboardWindow(QWidget):
                         ("player 1", "10"),
                         ("player 2", "20"),
                         ("player 3", "30"),
-                        ("player 4", "40")])
+                        ("player 4", "40")])'''
 
         self.background = self.get_background()
         self.title_label = self.get_title_label()
@@ -139,10 +132,11 @@ class LeaderboardWindow(QWidget):
 
     def read_list(self, items):
         # item : list of players records (tuple)
+        print(items)
         self.tableWidget.setRowCount(len(items))
         for i, item in enumerate(items):
             cell1 = QtWidgets.QTableWidgetItem(item[0])
-            cell2 = QtWidgets.QTableWidgetItem("        " + item[1] + "        ")
+            cell2 = QtWidgets.QTableWidgetItem("        " + str(item[1]) + "        ")
             cell1.setTextAlignment(QtCore.Qt.AlignCenter)
             cell2.setTextAlignment(QtCore.Qt.AlignCenter)
             self.tableWidget.setItem(i, 0, cell1)
@@ -172,4 +166,6 @@ class LeaderboardMain(QMainWindow):
             painter.drawPixmap(frameRect.left(), frameRect.top(), currentFrame)
 
     def refresh(self):
-        pass
+        f = Facade.get_instance()
+        leaderboard_list = f.get_leaderboard()
+        self.Window.read_list(leaderboard_list)

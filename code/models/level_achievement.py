@@ -3,22 +3,32 @@ from models.achievements import AchievementInterface
 
 class LevelAchievement(AchievementInterface):
 
-    def __init__(self, describtion, checked, player):
-        self.describtion = describtion
-        self.curr_player = player
+    def __init__(self, ach_id, description, checked, goal):
+        self.ach_id = ach_id
+        self.description = description
+        self.goal = goal
         self.checked = checked
-        self.parseDescribtion()
 
-    # des >> reach level num
-    def parseDescribtion(self):
-        resArr = self.describtion.split()
-        self.max_achievement = int(resArr[-1])  # last index is max number
+    def __eq__(self, other):
+        if not isinstance(other, LevelAchievement):
+            return NotImplemented
 
-    def update(self, achievement_type):
-        if achievement_type == "level" and self.curr_player.xp >= self.max_achievement:
-            i = 0
-            while i < len(self.curr_player.achievements):
-                if self.curr_player.achievements[i].describtion == self.describtion:
-                    self.curr_player.achievements[i].checked = 1
-                    break
-                i = i + 1
+        return self.ach_id == other.ach_id and self.description == other.description and self.checked == other.checked and self.goal == other.goal
+
+    def get_id(self):
+        return self.ach_id
+
+    def get_description(self):
+        return self.description
+
+    def get_checked(self):
+        return self.checked
+
+    def get_reward(self):
+        return self.goal * 10
+
+    def update(self, achievement_type, player):
+        if achievement_type == "level" and player.get_level() >= self.goal and self.checked == 0:
+            self.checked = 1
+            player.increase_xp(self.get_reward())
+            player.increase_weekly_xp(self.get_reward())

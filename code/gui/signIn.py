@@ -1,16 +1,11 @@
-import sys
-import time
 from PyQt5 import QtCore, QtWidgets
 from PyQt5 import QtGui
-from PyQt5.QtCore import QUrl, QSize
 from PyQt5.QtGui import QMovie, QPainter
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QProgressBar, QLabel, QLineEdit
+from PyQt5.QtWidgets import QMainWindow, QWidget, QLineEdit
 
 import gui
 import params
-from auth_proxy.facade import Facade
-from gamespace import GamespaceMain
+from backend_layer.facade import Facade
 
 
 class SigninWindow(QWidget):
@@ -195,7 +190,7 @@ class SigninWindow(QWidget):
     def sign_in_db(self):
         self.invalid_username_label.setVisible(False)
         self.invalid_password_label.setVisible(False)
-        f = Facade()
+        f = Facade.get_instance()
         # check > boolean, response > player object
         check, response = f.signin_request(self.get_username(), self.get_user_password())
         if not check:  # response is an error msg

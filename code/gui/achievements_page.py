@@ -12,13 +12,14 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPixmap
 
 import gui
+from backend_layer.facade import Facade
 from params import *
 
 
-class Ui_MainWindow(object):
+class AchievementsWindow(QWidget):
     def init_bcg_lbl(self):
-        label = QtWidgets.QLabel(self.centralwidget)
-        #label.setGeometry(QtCore.QRect(0, 0, 5556, 5574))
+        label = QtWidgets.QLabel(self)
+        # label.setGeometry(QtCore.QRect(0, 0, 5556, 5574))
         label.setGeometry(0, 0, 600, 750)
         label.setFixedSize(1920, 1080)
         label.setText("")
@@ -27,31 +28,30 @@ class Ui_MainWindow(object):
         return label
 
     def init_namelbl(self):
-        namelbl = QtWidgets.QLabel(self.centralwidget)
+        namelbl = QtWidgets.QLabel(self)
         namelbl.setGeometry(QtCore.QRect(880, 250, 131, 31))
         font = QtGui.QFont()
         font.setPointSize(17)
         namelbl.setFont(font)
         namelbl.setStyleSheet("color:white;")
         namelbl.setObjectName("namelbl")
-        namelbl.setText("hello Alien")
+        # namelbl.setText(gui.player_global.get_name())
         return namelbl
 
     def init_avatarlbl(self):
-        avatarlbl = QtWidgets.QLabel(self.centralwidget)
+        avatarlbl = QtWidgets.QLabel(self)
         avatarlbl.setGeometry(QtCore.QRect(850, 60, 180, 180))
         avatarlbl.setStyleSheet("background-color:white;\n"
                                 "border-radius:90px;")
         avatarlbl.setObjectName("avatarlbl")
-        pixmap = QPixmap(gui.player_global.get_avatar())
+        '''pixmap = QPixmap(gui.player_global.get_avatar())
         avatarlbl.setPixmap(QPixmap(pixmap))
-        avatarlbl.setScaledContents(True)
-
+        avatarlbl.setScaledContents(True)'''
         return avatarlbl
 
     def get_back_button(self):
-        button = QtWidgets.QPushButton(self.centralwidget)
-        button.setGeometry(QtCore.QRect(80, 920, 81, 81))
+        button = QtWidgets.QPushButton(self)
+        button.setGeometry(QtCore.QRect(40, 870, 80, 80))
         button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         button.setStyleSheet(back_button_style)
         button.setText("")
@@ -63,20 +63,19 @@ class Ui_MainWindow(object):
         return button
 
     def init_achievements_table(self):
-        achievements_table = QtWidgets.QTableWidget(self.centralwidget)
+        achievements_table = QtWidgets.QTableWidget(self)
         achievements_table.setGeometry(QtCore.QRect(380, 320, 1150, 300))
         achievements_table.setFixedHeight(570)
         achievements_table.horizontalScrollBar().hide()
         achievements_table.setStyleSheet(achievment_table_style)
         achievements_table.verticalScrollBar().setStyleSheet(scroll_style)
-
-
         achievements_table.setObjectName("achievements_table")
         achievements_table.setFont(init_font_start(20, False))
         achievements_table.horizontalHeader().setFont(init_font_start(20, False))
-        achievements_table.setColumnCount(2)
-        achievements_table.setColumnWidth(0, 622)
-        achievements_table.setColumnWidth(1, 526)
+        achievements_table.setColumnCount(3)
+        achievements_table.setColumnWidth(0, 500)
+        achievements_table.setColumnWidth(1, 400)
+        achievements_table.setColumnWidth(2, 250)
         achievements_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         achievements_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         achievements_table.verticalHeader().hide()
@@ -87,54 +86,102 @@ class Ui_MainWindow(object):
         item = QtWidgets.QTableWidgetItem()
         item.setText("Reward")
         achievements_table.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        item.setText("Progress")
+        achievements_table.setHorizontalHeaderItem(2, item)
         achievements_table.resetVerticalScrollMode()
         achievements_table.setSortingEnabled(True)
         return achievements_table
 
-    def fill_table(self, list=[]):
-        x = [('a', 50), ('b', 10), ('c', 60), ('b', 10), ('c', 60), ('b', 10), ('c', 60)]
-        self.achievements_table.setRowCount(len(x))
+    def fill_table(self, achievements_list=[]):
+        # x = [('a', 50), ('b', 10), ('c', 60), ('b', 10), ('c', 60), ('b', 10), ('c', 60)]
+        self.achievements_table.setRowCount(len(achievements_list))
         j = 0
-        for i in x:
-            achievment, reward = i
-            print(i, j)
+        for i in achievements_list:
+            achievment, reward, checked = i
+            print(i, j, "achievement >>> " , achievment, reward, checked)
+
             item = QtWidgets.QTableWidgetItem()
             item.setTextAlignment(QtCore.Qt.AlignCenter)
             item.setText(str(achievment))
             self.achievements_table.setItem(j, 0, item)
+
             item = QtWidgets.QTableWidgetItem()
             item.setTextAlignment(QtCore.Qt.AlignCenter)
-            item.setText(str(reward))
+            item.setText(str(reward) + " xp")
             self.achievements_table.setItem(j, 1, item)
+
+            item = QtWidgets.QTableWidgetItem()
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            item.setText(('Completed!' if checked else 'incomplete'))
+            self.achievements_table.setItem(j, 2, item)
+
             self.achievements_table.setRowHeight(j, 100)
             j += 1
 
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(gamespace_width, gamespace_height)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
+    def __init__(self, parent=None):
+        super(AchievementsWindow, self).__init__(parent)
+        self.resize(1938, 1043)
+        self.setFont(get_font(15))
+        self.setWindowTitle("Achievements")
+        
+        # MainWindow.resize(gamespace_width, gamespace_height)
+        # self.central_widget = QtWidgets.QWidget(self)
+        # self.central_widget.setObjectName("central_widget")
         self.bcg_lbl = self.init_bcg_lbl()
         self.achievements_table = self.init_achievements_table()
-        self.fill_table()
+
+        # self.fill_table()
         self.namelbl = self.init_namelbl()
         self.avatarlbl = self.init_avatarlbl()
         self.back_btn = self.get_back_button()
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        # self.setCentralWidget(self.central_widget)
+        # self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(self)
 
-    def retranslateUi(self, MainWindow):
+    '''def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-
+'''
 
 # TODO remove and link to profile
-if __name__ == "__main__":
+'''if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     # app.setStyleSheet(stylesheet)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
+    ui = AchievementsWindow()
     ui.setupUi(MainWindow)
     MainWindow.showFullScreen()
     sys.exit(app.exec_())
+
+'''
+class AchievementsMain(QMainWindow):
+    def __init__(self, parent=None):
+        super(AchievementsMain, self).__init__(parent)
+        self.setGeometry(50, 50, 600, 750)
+        self.setFixedSize(1920, 1080)
+        self.startUIWindow()
+        self.movie = QMovie("../storage/BackGround/user.jpg")
+        self.movie.frameChanged.connect(self.repaint)
+        self.movie.start()
+
+    def startUIWindow(self):
+        self.Window = AchievementsWindow(self)
+        self.setWindowTitle("My Program")
+
+    def paintEvent(self, event):
+        currentFrame = self.movie.currentPixmap()
+        frameRect = currentFrame.rect()
+        frameRect.moveCenter(self.rect().center())
+        if frameRect.intersects(event.rect()):
+            painter = QPainter(self)
+            painter.drawPixmap(frameRect.left(), frameRect.top(), currentFrame)
+
+    def refresh(self):
+        self.Window.namelbl.setText(gui.player_global.get_name())
+        pixmap = QPixmap(gui.player_global.get_avatar())
+        self.Window.avatarlbl.setPixmap(QPixmap(pixmap))
+        self.Window.avatarlbl.setScaledContents(True)
+        f = Facade.get_instance()
+        x = f.get_achievements()
+        self.Window.fill_table(x)

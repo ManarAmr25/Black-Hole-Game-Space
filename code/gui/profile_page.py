@@ -1,52 +1,14 @@
-import sys
 from PyQt5 import QtCore, QtWidgets
 from PyQt5 import QtGui
 from PyQt5.QtGui import QMovie, QPainter, QPixmap
 from PyQt5.QtWidgets import QMainWindow, QWidget, QFileDialog
 
-from auth_proxy.facade import Facade
+from backend_layer.facade import Facade
 import gui
 import params
 
+
 class ProfileWindow(QWidget):
-
-    def get_image(self):
-        fname = QFileDialog.getOpenFileName(self, "Open file", "c:\\", "Image files (*.jpg *.jpeg *.png)")
-        image_path = fname[0]
-        # print("image path : ", image_path, "**", len(image_path))
-        if len(image_path) == 0:  # no pic chosen
-            return
-        pixmap = QPixmap(image_path)
-        self.profile_pic.setPixmap(QPixmap(pixmap))
-        self.profile_pic.setScaledContents(True)
-        gui.player_global.set_avatar(image_path)
-        # TODO : copy image to our storage to use it later
-
-    def save_name(self):
-        self.editname_button.setText("Edit")
-        print(self.name_lineEdit.text())
-        # f = Facade()  # TODO : facade needs to have more functionality from data base manager
-        gui.player_global.set_name(self.name_lineEdit.text())  # TODO : only if database check is true
-        self.name_lineEdit.setStyleSheet(params.profile_name_lineEdit_disabled)
-        self.name_lineEdit.setDisabled(True)
-
-    def enable_name(self):
-        print("edit name")
-        self.editname_button.setText("Save")
-        self.name_lineEdit.setStyleSheet(params.profile_name_lineEdit_enabled)
-        self.name_lineEdit.setEnabled(True)
-        self.name_lineEdit.setFocus(True)
-
-    def toggle_field(self):
-        if self.name_lineEdit.isEnabled():  # button is active now and we need to save changes
-            self.save_name()
-        else:  # button is disabled and we need to make changes
-            self.enable_name()
-
-    def keyPressEvent(self, event):
-        if event.key() == QtCore.Qt.Key_Return:
-            self.save_name()
-
 
     def __init__(self, parent=None):
         super(ProfileWindow, self).__init__(parent)
@@ -65,6 +27,7 @@ class ProfileWindow(QWidget):
         self.profile_pic = self.get_profile_pic()
         self.username_label = self.get_username_label()
         self.change_pic_button = self.get_change_pic_button()
+        self.achievements_button = self.get_achievements_button()
         self.stats_label = self.get_stats_label()
         self.name_lineEdit = self.get_name_lineEdit()
         self.editname_button = self.get_editname_button()
@@ -79,8 +42,8 @@ class ProfileWindow(QWidget):
         self.games_num_label = self.get_games_num_label()
         self.daily_num_ch_label = self.get_daily_ch_num_label()
         self.weekly_num_xp_label = self.get_weekly_xp_num_label()
+        self.invalid_pic_label = self.get_invalid_pic_label()
         self.back_button = self.get_back_button()
-
 
         # ####################################################################
 
@@ -95,6 +58,7 @@ class ProfileWindow(QWidget):
         self.invalid_name_label.raise_()
         self.change_pw_button.raise_()
         self.frame.raise_()
+        self.invalid_pic_label.raise_()
         self.back_button.raise_()
 
         # self.retranslateUi(self)
@@ -137,7 +101,7 @@ class ProfileWindow(QWidget):
         label.setText("User Name:")
         label.setObjectName("username_label")
         return label
-        
+
     def get_change_pic_button(self):
         button = QtWidgets.QPushButton(self)
         button.setGeometry(QtCore.QRect(70, 510, 291, 41))
@@ -148,8 +112,26 @@ class ProfileWindow(QWidget):
         button.setFlat(False)
         button.setText("Change Profile Picture")
         button.setObjectName("change_pic_pushButton")
-        button.clicked.connect(self.get_image)
+        button.clicked.connect(self.set_profile_pic)
         return button
+
+    def get_achievements_button(self):
+        achievementbtn = QtWidgets.QPushButton(self)
+        achievementbtn.setGeometry(QtCore.QRect(850, 850, 150, 51))
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        achievementbtn.setFont(font)
+        achievementbtn.setStyleSheet("QPushButton{\n"
+                                     "background-color:rgba(245, 98, 3,0.9);\n"
+                                     "border-radius:25px;\n"
+                                     "color:white;}\n"
+                                     "QPushButton:hover {\n"
+                                     "    background-color: #e87c35;\n"
+                                     "}")
+        achievementbtn.setObjectName("achievementbtn")
+        achievementbtn.setText("Achievements")
+        achievementbtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        return achievementbtn
 
     def get_stats_label(self):
         label = QtWidgets.QLabel(self)
@@ -160,7 +142,7 @@ class ProfileWindow(QWidget):
         label.setObjectName("stats_label")
         label.setText("Stats:")
         return label
-        
+
     def get_name_lineEdit(self):
         lineEdit = QtWidgets.QLineEdit(self)
         lineEdit.setGeometry(QtCore.QRect(730, 240, 341, 61))
@@ -172,7 +154,7 @@ class ProfileWindow(QWidget):
         lineEdit.setText("Player\'s name")
         lineEdit.setDisabled(True)
         return lineEdit
- 
+
     def get_editname_button(self):
         button = QtWidgets.QPushButton(self)
         button.setGeometry(QtCore.QRect(1130, 250, 71, 41))
@@ -220,7 +202,7 @@ class ProfileWindow(QWidget):
         label.setText("  number of wins : ")
         label.setObjectName("wins_label")
         return label
-    
+
     def get_games_label(self):
         label = QtWidgets.QLabel(self.frame)
         label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -230,7 +212,7 @@ class ProfileWindow(QWidget):
         label.setText("  number of games : ")
         label.setObjectName("games_label")
         return label
-        
+
     def get_daily_ch_label(self):
         label = QtWidgets.QLabel(self.frame)
         label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -260,7 +242,7 @@ class ProfileWindow(QWidget):
         label.setText("  a number ")
         label.setObjectName("wins_num_label")
         return label
-    
+
     def get_games_num_label(self):
         label = QtWidgets.QLabel(self.frame)
         label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -280,7 +262,7 @@ class ProfileWindow(QWidget):
         label.setObjectName("daily_ch_num_label")
         label.setText("  a number ")
         return label
-    
+
     def get_weekly_xp_num_label(self):
         label = QtWidgets.QLabel(self.frame)
         label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -289,6 +271,17 @@ class ProfileWindow(QWidget):
         label.setStyleSheet(params.profile_num_label_style)
         label.setObjectName("weekly_xp_num_label")
         label.setText("  a number ")
+        return label
+
+    def get_invalid_pic_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(560, 550, 220, 41))
+        label.setFont(params.get_font(10, 62, True))
+        label.setStyleSheet(params.invalid_style)
+        label.setAlignment(QtCore.Qt.AlignCenter)
+        label.setText("Can't set profile picture")
+        label.setObjectName("invalid_pic_label")
+        label.setVisible(False)
         return label
 
     def get_back_button(self):
@@ -304,6 +297,55 @@ class ProfileWindow(QWidget):
         button.setIconSize(QtCore.QSize(50, 50))
         button.setObjectName("back_pushButton")
         return button
+
+    def set_profile_pic(self):
+        self.invalid_pic_label.setVisible(False)
+        fname = QFileDialog.getOpenFileName(self, "Open file", "c:\\", "Image files (*.jpg *.jpeg *.png)")
+        image_path = fname[0]
+        # print("image path : ", image_path, "**", len(image_path))
+        if len(image_path) == 0:  # no pic chosen
+            return
+
+        print("create facade in get image")
+        f = Facade.get_instance()
+        print("facade instance created")
+        check, new_path = f.change_profile_pic(image_path)
+        if check:
+            pixmap = QPixmap(new_path)
+            self.profile_pic.setPixmap(QPixmap(pixmap))
+            self.profile_pic.setScaledContents(True)
+            # gui.player_global.set_avatar(image_path)
+        else:
+            self.invalid_pic_label.setVisible(True)
+
+    def save_name(self):
+        self.invalid_name_label.setVisible(False)
+        self.editname_button.setText("Edit")
+        print(self.name_lineEdit.text())
+        f = Facade.get_instance()
+        # gui.player_global.set_name(self.name_lineEdit.text())
+        if not f.save_name(self.name_lineEdit.text()):
+            self.invalid_name_label.setVisible(True)
+        else:
+            self.name_lineEdit.setStyleSheet(params.profile_name_lineEdit_disabled)
+            self.name_lineEdit.setDisabled(True)
+
+    def enable_name(self):
+        print("edit name")
+        self.editname_button.setText("Save")
+        self.name_lineEdit.setStyleSheet(params.profile_name_lineEdit_enabled)
+        self.name_lineEdit.setEnabled(True)
+        self.name_lineEdit.setFocus(True)
+
+    def toggle_field(self):
+        if self.name_lineEdit.isEnabled():  # button is active now and we need to save changes
+            self.save_name()
+        else:  # button is disabled and we need to make changes
+            self.enable_name()
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Return:
+            self.save_name()
 
     '''def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -353,13 +395,13 @@ class ProfileMain(QMainWindow):
             painter = QPainter(self)
             painter.drawPixmap(frameRect.left(), frameRect.top(), currentFrame)
 
-
     def refresh(self):
         self.Window.name_lineEdit.setText(gui.player_global.get_name())
         self.Window.name_lineEdit.setDisabled(True)
         self.Window.name_lineEdit.setStyleSheet(params.profile_name_lineEdit_disabled)
         self.Window.invalid_name_label.setVisible(False)
         self.Window.editname_button.setText("Edit")
+        print(gui.player_global.get_name(), gui.player_global.get_wins(), gui.player_global.get_games(), gui.player_global.get_daily_challenges(), gui.player_global.get_weekly_xp())
         self.Window.wins_num_label.setText(str(gui.player_global.get_wins()))
         self.Window.games_num_label.setText(str(gui.player_global.get_games()))
         self.Window.daily_num_ch_label.setText(str(gui.player_global.get_daily_challenges()))

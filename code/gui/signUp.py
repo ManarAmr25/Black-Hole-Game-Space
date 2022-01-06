@@ -1,15 +1,11 @@
-import sys
-import time
 from PyQt5 import QtCore, QtWidgets
 from PyQt5 import QtGui
-from PyQt5.QtCore import QUrl, QSize
 from PyQt5.QtGui import QMovie, QPainter
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QProgressBar, QLabel, QLineEdit
+from PyQt5.QtWidgets import QMainWindow, QWidget, QLineEdit
 
 import gui
 import params
-from auth_proxy.facade import Facade
+from backend_layer.facade import Facade
 
 
 class SignupWindow(QWidget):
@@ -244,7 +240,8 @@ class SignupWindow(QWidget):
             print("invalid")
             return False
         else:
-            f = Facade()
+            f = Facade.get_instance()
+            print("facade created")
             check, player = f.signup_request(self.get_username(), self.get_user_password(), self.get_gender())
             print("check: ", check)
             print("player: ", player)

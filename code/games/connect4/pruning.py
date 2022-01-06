@@ -1,5 +1,5 @@
 import sys
-from heuristic import *
+from games.connect4.heuristic import *
 from pptree import *
 from queue import PriorityQueue
 
@@ -15,8 +15,8 @@ def decision(board, last_in_row, k):
     root = Node(" max")  # for printing the decision tree
     best_move, best_score, node_count = maximizer(board, last_in_row, 0, k, -sys.maxsize - 1, sys.maxsize, root)
     root.name += " :: {} nodes expanded".format(node_count + 1)
-    #print_tree(root)  # print decision tree
-    print(f"{node_count + 1} nodes expanded")
+    # print_tree(root)  # print decision tree
+    # print(f"{node_count + 1} nodes expanded")
     return best_move  # return decided column
 
 

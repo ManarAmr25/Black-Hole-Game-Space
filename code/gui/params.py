@@ -98,6 +98,11 @@ gamespace_height = 1080
 landing_bcg = "../storage/BackGround/landing_page.gif"
 gamespace_bcg = "../storage/BackGround/gamespace.jpg"
 start_bcg = "../storage/BackGround/start.jpg"
+startG_bcg = "../storage/BackGround/gamespace.jpg"
+
+# sound
+sound = "../storage/Sounds/mixkit-small-hit-in-a-game-2072.wav"
+
 # fonts
 font_landing = init_font_landing()
 
@@ -149,6 +154,23 @@ startpg_buttons_sheet = ("QPushButton{\n"
                          "}\n"
                          "QPushButton:hover {\n"
                          "    background-color:#BFA2DB;\n"
+                         "}")
+startG_buttons_sheet = ("QPushButton{\n"
+                         "    box-shadow: -1px 0px 6px 0px #F0D9FF;\n"
+                         "    background-color:#98BAE7;\n"
+                         "    border-radius:38px;\n"
+                         "    border:4px solid #F0D9FF;\n"
+                         "    cursor:pointer;\n"
+                         "    color:#14279B;\n"
+                         "    font-size:30px;\n"
+                         "    font-family:OCR A Extended;\n"
+                         "    font-style:italic;\n"
+                         "    font-weight:bold;\n"
+                         "    padding:22px 15px;\n"
+                         "}\n"
+                         "QPushButton:hover {\n"
+                         "    background-color:#F14A16;\n"
+                        "color: #E6E6E6;\n"
                          "}")
 landing_title = "Black Hole"
 gamespace_title = "Home"

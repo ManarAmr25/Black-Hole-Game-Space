@@ -4,6 +4,8 @@ from PyQt5.QtWidgets import QMainWindow, QWidget
 import gui
 from models.player import Player
 from params import *
+import gui
+from models.guest import Guest
 
 class StartWindow(QWidget):
     def init_signin_btn(self):
@@ -28,6 +30,7 @@ class StartWindow(QWidget):
         guest_btn.setObjectName("guest_btn")
         guest_btn.setText("Play as a guest")
         guest_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        gui.player_global = Guest()
         return guest_btn
 
     def init_quit_btn(self):

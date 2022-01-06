@@ -1,8 +1,6 @@
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtGui import QMovie, QPainter, QPixmap
+from PyQt5.QtGui import QPixmap
 import gui
-from PyQt5.QtWidgets import QMainWindow, QWidget
-from params import *
+from gui.params import *
 
 
 class GamespaceWindow(QWidget):
@@ -65,7 +63,7 @@ class GamespaceWindow(QWidget):
         gamelbl.setLayoutDirection(QtCore.Qt.LeftToRight)
         gamelbl.setStyleSheet("background:rgba(85, 170, 255,0.3);")
         gamelbl.setObjectName("gamelbl")
-        gamelbl.setText("Game ")
+        gamelbl.setText(" ")
         return gamelbl
 
     def init_profilebtn(self):
@@ -89,22 +87,34 @@ class GamespaceWindow(QWidget):
 
     def init_connect4btn(self):
         connect4btn = QtWidgets.QPushButton(self.centralwidget)
-        connect4btn.setGeometry(QtCore.QRect(30, 320, 181, 51))
+        connect4btn.setGeometry(QtCore.QRect(50, 450, 400, 300))
         font = QtGui.QFont()
         font.setPointSize(13)
         connect4btn.setFont(font)
         connect4btn.setStyleSheet("QPushButton{\n"
-                                 "background-color:rgb(85, 170, 255);\n"
-                                 "border-radius:15px;\n"
+                                 "background-color:#98BAE7;\n"
+                                 "border-radius:5px;\n"
                                  "font-color:white;}\n"
                                  "QPushButton:hover {\n"
-                                 "    background-color: #6fbffc;\n"
-                                 "}"
-                                 )
+                                 "    background-color: #F14A16;\n"
+                                 "}" )
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap("../storage/Icons/connect.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        connect4btn.setIcon(icon1)
+        connect4btn.setIconSize(QtCore.QSize(400, 250))
         connect4btn.setObjectName("connect4btn")
-        connect4btn.setText("Connect 4")
+        connect4btn.setText(" ")
         connect4btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.nameg = QtWidgets.QLabel(self.centralwidget)
+        self.nameg.setGeometry(QtCore.QRect(175, 770, 145, 31))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.nameg.setFont(font)
+        self.nameg.setStyleSheet("color:white;")
+        self.nameg.setObjectName("namelbl")
+        self.nameg.setText("Connect 4")
         return connect4btn
+
 
     def init_exitbtn(self):
         exitbtn = QtWidgets.QPushButton(self.centralwidget)
@@ -127,7 +137,7 @@ class GamespaceWindow(QWidget):
     # TODO : temporary
     def init_leaderboardbtn(self):
         leaderboardbtn = QtWidgets.QPushButton(self.centralwidget)
-        leaderboardbtn.setGeometry(QtCore.QRect(1650, 20, 71, 51))
+        leaderboardbtn.setGeometry(QtCore.QRect(1600, 20, 150, 51))
         font = QtGui.QFont()
         font.setPointSize(13)
         leaderboardbtn.setFont(font)
