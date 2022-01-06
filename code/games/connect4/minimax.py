@@ -1,5 +1,5 @@
 import sys
-from games.connect4.heuristic import *
+from heuristic import *
 from pptree import *
 
 # entry point
