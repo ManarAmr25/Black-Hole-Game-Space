@@ -1,4 +1,6 @@
 import mysql.connector
+
+from models.games_achievement import GamesAchievement
 from models.player import Player
 from models.xp_achievement import XpAchievement
 from models.wins_achievement import WinsAchievement
@@ -44,7 +46,7 @@ class DBManager:
 
     def __init__(self, token):
         if DBManager.__instance is not None:
-            raise Exception("Can't create another instance")
+            raise Exception("Can't create another instance of DBManager")
 
         if token == self.__secret_token:
             self.__connection = None
@@ -64,6 +66,10 @@ class DBManager:
                 return DBManager(token)
         else:
             raise Exception("Unauthenticated access to database")
+
+    @staticmethod
+    def reset_instance():
+        DBManager.__instance = None
 
     def __connect(self):
         try:
@@ -95,11 +101,10 @@ class DBManager:
             res = self.__cursor.fetchall()
             if len(res) == 0:
                 return def_q
-            print(res[0])
             return res[0]
         except Exception as e:
             print(e)
-            return def_q
+            return def_q  # default quote
 
     def add_quote(self, q):
         if not isinstance(q, str) or len(q) == 0:
@@ -120,14 +125,13 @@ class DBManager:
             self.__cursor.execute(f"SELECT name FROM user_info WHERE name = '{str(user_name)}'")
             res = self.__cursor.fetchall()
             if len(res) == 0:
-                False
-            print(res[0])
+                return False
             return True
         except Exception as e:
             print(e)
             return False
 
-    # for sign in & profile > returns pair of empty strings if user_name isn't found
+    # for sign in & profile > returns pair of password and salt, or pair of empty strings if user_name isn't found
     def get_password(self, user_name):
         if not isinstance(user_name, str) or len(user_name) == 0:
             return "", ""
@@ -136,7 +140,6 @@ class DBManager:
             res = self.__cursor.fetchall()
             if len(res) == 0:
                 return "", ""
-            print(res[0])
             return res[0]
         except Exception as e:
             print(e)
@@ -146,13 +149,14 @@ class DBManager:
     def get_player(self, user_name):
         if not isinstance(user_name, str) or len(user_name) == 0:
             return False, None
-        list = self.get_achievement(user_name)
+        list = self.get_achievements(user_name)
         try:
             self.__cursor.execute(f"SELECT * FROM user_info WHERE name = '{str(user_name)}'")
             res = self.__cursor.fetchall()
             if len(res) == 0:
                 return False, None
             player_data = res[0]
+            # print("in db : player data : ", player_data)
             gender = True if player_data[3] == 1 else False
             player = Player.build_player(
                 player_data[0],  # name
@@ -168,6 +172,8 @@ class DBManager:
             )
             if player is None:
                 return False, None
+            # print("in db : ", player.get_name(), player.get_wins(), player.get_games(),player.get_daily_challenges(), player.get_weekly_xp())
+
             return True, player
         except Exception as e:
             print(e)
@@ -179,11 +185,14 @@ class DBManager:
                 password) == 0 or not isinstance(salt, str) or len(salt) == 0 or not isinstance(gender, bool):
             return False, None
         gend = 1 if gender else 0
-        list = self.get_achievement(user_name)
         try:
             self.__cursor.execute(
                 f"INSERT INTO user_info(name, password, salt, gender) VALUES('{str(user_name)}', '{str(password)}','{str(salt)}', {gend})")
             self.__connection.commit()
+            check = self.create_achievements(user_name)
+            if not check:
+                print("Failed to insert achievements")
+            list = self.get_achievements(user_name)
             player = Player.build_player(
                 user_name,  # name
                 gender,  # gender
@@ -208,11 +217,23 @@ class DBManager:
         if not self.check_name(player.get_name()):
             return False
         try:
+            avatar_path = (player.get_avatar().replace('\\', '\\\\'))
+            # save player progress
             self.__cursor.execute(
-                f"UPDATE user_info SET name = '{player.get_name()}', gender = {gender}, avatar = '{player.get_avatar()}', level = {player.get_level()}, xp = {player.get_xp()}, weekly_xp = {player.get_weekly_xp()}, wins = {player.get_wins()}, games = {player.get_games()}, daily_ch = {player.get_daily_challenges()} WHERE name = '{str(player.get_name())}'")
+                f"UPDATE user_info SET name = '{player.get_name()}', gender = {gender}, avatar = '{avatar_path}', level = {player.get_level()}, xp = {player.get_xp()}, weekly_xp = {player.get_weekly_xp()}, wins = {player.get_wins()}, games = {player.get_games()}, daily_ch = {player.get_daily_challenges()} WHERE name = '{str(player.get_name())}';")
             self.__connection.commit()
 
-            return True
+            # save player achievements
+            '''achievements_list = player.get_achievements()
+            for ach in achievements_list:
+                self.__cursor.execute(
+                    f"UPDATE achievements SET checked = {ach.checked} WHERE name = '{player.get_name()}' and checked != {ach.checked}")
+                self.__connection.commit()'''
+            check = self.update_db_achievements(player.get_achievements(), player.get_name())
+            print("check", check)
+            # TODO : save daily challenges
+
+            return True and check
         except Exception as e:
             print(e)
             return False
@@ -228,7 +249,7 @@ class DBManager:
             self.__connection.commit()
             return True
         except Exception as e:
-            print(e)
+            #print(e)
             return False
 
     # update password in profile
@@ -247,31 +268,77 @@ class DBManager:
             print(e)
             return False
 
-    # get all achievements
-    def get_achievement(self, user_name):
-        self.__cursor.execute(f"SELECT * FROM achievements WHERE name = '{str(user_name)}'")
-        res = self.__cursor.fetchall()
-        i = 0
-        list = []
-        while i != len(res):
-            achievement_data = res[i]
-            if achievement_data[3] == "xp":
-                list.add(XpAchievement(achievement_data[1], achievement_data[2]))
-            elif achievement_data[3] == "wins":
-                list.add(WinsAchievement(achievement_data[1], achievement_data[2]))
-            elif achievement_data[3] == "level":
-                list.add(LevelAchievement(achievement_data[1], achievement_data[2]))
-            elif achievement_data[3] == "daily challenge":
-                list.add(DailyChallengeAchievement(achievement_data[1], achievement_data[2]))
-            # TODO: tournament
-            i = i + 1
-        return list
+    def create_achievements(self, name):
+        if not isinstance(name, str) or len(name) == 0:
+            return False
+        try:
+            self.__cursor.execute(f"SELECT id FROM game_achievements")
+            res = self.__cursor.fetchall()
+            for achievement_id in res:
+                self.__cursor.execute(f"INSERT INTO player_achievements VALUES('{str(name)}', '{achievement_id[0]}', 0);")
+                self.__connection.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
 
-    def update_db_achievements(self, list, user_name):
-        i = 0
-        while i < len(list):
-            ach = list[i]
-            self.__cursor.execute(
-                f"UPDATE achievements SET checked = {ach.checked} WHERE name = '{str(user_name)}' and checked != {ach.checked}")
-            self.__connection.commit()
-            i = i + 1
+    # get all achievements
+    def get_achievements(self, user_name):
+        if not isinstance(user_name, str) or len(user_name) == 0:
+            return []
+        try:
+            self.__cursor.execute(f"SELECT g.id, g.description, g.type, p.checked, g.goal FROM game_achievements AS g, player_achievements AS p WHERE g.id = p.achievement_id AND p.player_name = '{str(user_name)}'")
+            res = self.__cursor.fetchall()  # (id, description, type, checked, goal)
+            achievements_list = []
+            for achievement_data in res:
+                if achievement_data[2] == "xp":
+                    achievements_list.append(XpAchievement(achievement_data[0], achievement_data[1], achievement_data[3], achievement_data[4]))
+                elif achievement_data[2] == "wins":
+                    achievements_list.append(WinsAchievement(achievement_data[0], achievement_data[1], achievement_data[3], achievement_data[4]))
+                elif achievement_data[2] == "level":
+                    achievements_list.append(LevelAchievement(achievement_data[0], achievement_data[1], achievement_data[3], achievement_data[4]))
+                elif achievement_data[2] == "daily challenge":
+                    achievements_list.append(DailyChallengeAchievement(achievement_data[0], achievement_data[1], achievement_data[3], achievement_data[4]))
+                elif achievement_data[2] == "game":
+                    achievements_list.append(GamesAchievement(achievement_data[0], achievement_data[1], achievement_data[3], achievement_data[4]))
+
+                # TODO: tournament
+            return achievements_list
+        except Exception as e:
+            print(e)
+            return []
+
+    def update_db_achievements(self, achievements_list, user_name):
+        if not isinstance(achievements_list, list) or len(achievements_list) == 0 or not isinstance(user_name, str) or len(user_name) == 0:
+            return False
+        if not self.check_name(user_name):
+            return False
+        try:
+            for ach in achievements_list:
+                self.__cursor.execute(f"UPDATE player_achievements SET checked = {ach.get_checked()} WHERE player_name = '{str(user_name)}' and achievement_id = {ach.get_id()} and checked != 1")
+                self.__connection.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+    def get_leaderboard(self):
+        try:
+            self.__cursor.execute(f"SELECT name, weekly_xp FROM user_info ORDER BY weekly_xp DESC LIMIT 10;")
+            res = self.__cursor.fetchall()  # (name, weekly_xp)
+            if len(res) != 0:
+                last_xp = res[-1][-1]
+                self.__cursor.execute(f"SELECT name, weekly_xp FROM user_info WHERE weekly_xp = {last_xp};")
+                res2 = self.__cursor.fetchall()  # (name, weekly_xp)
+            return DBManager.remove_duplicates(res, res2)
+        except Exception as e:
+            print(e)
+            return []
+
+    @staticmethod
+    def remove_duplicates(l1, l2):
+        result = l1
+        for a in l2:
+            if a not in result:
+                result.append(a)
+        return result
