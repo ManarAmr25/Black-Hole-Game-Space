@@ -135,6 +135,12 @@ class Player(guest.Guest):
     def get_achievements(self):
         return self.achievements
 
+    def increase_xp(self, xp):
+        """Takes xp and adds them to Player's current xp points."""
+        if isinstance(xp, int) and xp >= 0:
+            self._xp += xp
+            self._level_up()  # reset level
+
     def increase_weekly_xp(self, xp):
         if isinstance(xp, int) and xp >= 0:
             print("weekly xp is increased by ", xp)
@@ -145,6 +151,17 @@ class Player(guest.Guest):
 
     def increment_games(self):
         self._games += 1
+
+    def report_game(self, is_win=0, gained_xp=0):
+        self.increment_games()
+        self.increase_xp(gained_xp)
+        self.increase_weekly_xp(gained_xp)
+        if is_win:
+            self.increment_wins()
+        self.update_achievements("game")
+        self.update_achievements("xp")
+        self.update_achievements("wins")
+        self.update_achievements("level")
 
     def set_achievement(self, achievements_list):
         if isinstance(achievements_list, list) and achievements_list is not None:

@@ -100,3 +100,6 @@ class Guest:
     def xp_to_complete(self):
         """Returns remaining xp to complete the level."""
         return self._max_lvl_xp - self._xp
+
+    def report_game(self, is_win=0, gained_xp=0):
+        self.increase_xp(gained_xp)

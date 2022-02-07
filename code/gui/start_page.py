@@ -118,4 +118,4 @@ class StartMain(QMainWindow):
             painter.drawPixmap(frameRect.left(), frameRect.top(), currentFrame)
 
     def refresh(self):
-        gui.player_global = Player()
+        gui.player_global = Guest()

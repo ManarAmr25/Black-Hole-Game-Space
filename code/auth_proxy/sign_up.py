@@ -37,9 +37,7 @@ class SignUp(SignUpInterface):
             return False, "Name already exists!"
         else:
             salt = generate_salt()
-            print("salt: ",salt.hex())
             password = hash_password(salt, password)
-            print("password: ", password.hex())
             return self.db.add_player(name, password.hex(), salt.hex(), gender)
 
     # check password

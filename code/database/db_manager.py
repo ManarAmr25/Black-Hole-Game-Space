@@ -254,6 +254,7 @@ class DBManager:
 
     # update password in profile
     def update_password(self, name, old_password, new_password):
+        print("inside db_manager's update_password")
         if not isinstance(name, str) or len(name) == 0 or not isinstance(old_password, str) or len(
                 old_password) == 0 or not isinstance(new_password, str) or len(new_password) == 0:
             return False

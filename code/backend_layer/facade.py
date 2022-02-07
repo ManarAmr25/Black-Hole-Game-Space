@@ -4,6 +4,7 @@ import shutil
 from auth_proxy.sign_up import SignUp
 from auth_proxy.sign_in import SignIn
 from backend_layer.getter import Getter
+from models.guest import Guest
 from models.player import Player
 from backend_layer.updater import Updater
 
@@ -15,11 +16,11 @@ class Facade:
         if Facade.__instance is not None:
             raise Exception("Can't create another instance of Facade")
         else:
-            self.player = None
-            self.s1 = SignUp()
-            self.s2 = SignIn()
-            self.u = Updater.get_instance()
-            self.g = Getter.get_instance()
+            self.player = Guest()
+            self.signup = SignUp()
+            self.signin = SignIn()
+            self.updater = Updater.get_instance()
+            self.getter = Getter.get_instance()
             Facade.__instance = self
 
     @staticmethod
@@ -35,29 +36,29 @@ class Facade:
         Facade.__instance = None
 
     def signup_request(self, name, password, gender):
-        check, player = self.s1.sign_up(name, password, gender)
-        print("sign up : " , check, player, name, password, gender)
+        check, player = self.signup.sign_up(name, password, gender)
+        print("sign up : ", check, player, name, password, gender)
         if check:
             self.player = player
         return check, player
 
     def signin_request(self, name, password):
-        check, player = self.s2.sign_in(name, password)
+        check, player = self.signin.sign_in(name, password)
         if check:
             self.player = player
         return check, player
 
     def save_player(self):
-        check = self.u.save_player(self.player)
+        check = self.updater.save_player(self.player)
         if check:
-            self.player = None
+            self.reset_player()
         return check
 
     def save_name(self, new_name):
-        return self.u.save_name(self.player, new_name)
+        return self.updater.save_name(self.player, new_name)
 
     def save_password(self, old_password, new_password):
-        return self.u.save_password(self.player, old_password, new_password)
+        return self.updater.save_password(self.player, old_password, new_password)
 
     def change_profile_pic(self, path):
         # path validation
@@ -85,10 +86,10 @@ class Facade:
         return res
 
     def get_quote(self):
-        return self.g.get_quote()
+        return self.getter.get_quote()
 
     def get_leaderboard(self):
-        return self.g.get_leaderboard()
+        return self.getter.get_leaderboard()
 
     def reset_player(self):
-        self.player = None
+        self.player = Guest()

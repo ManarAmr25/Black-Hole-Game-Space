@@ -1,4 +1,3 @@
-
 from PyQt5.QtCore import QUrl, QEventLoop, QTimer, QElapsedTimer
 from PyQt5.QtWidgets import QApplication
 import sys
@@ -16,25 +15,35 @@ from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
 import gui
 from backend_layer.facade import Facade
 from games.connect4 import start_game, level_of_difficulty, GUI
+from models.guest import Guest
 
 mode = 1
 difficult = 3
+
 
 def signup_to_gamespace():
     if signup.Window.sign_up_db():
         open_gamespace()
 
+
 def signin_to_gamespace():
     if signin.Window.sign_in_db():
         open_gamespace()
 
+
 def open_startpage():
     widget.setCurrentIndex(0)
-    if gui.player_global is not None or type(gui.player_global) != 'Guest':
-        f = Facade.get_instance()
+    print("open start page method, type :", type(gui.player_global).__name__)
+    f = Facade.get_instance()
+    print(type(gui.player_global).__name__, type(f.player).__name__)
+    if gui.player_global is not None and type(gui.player_global).__name__ != 'Guest':
+        print("saved successfully")
         f.save_player()
-        gui.player_global = None
+        gui.player_global = Guest()
+        f.reset_player()
+        print(type(gui.player_global).__name__, type(f.player).__name__)
     w.refresh()
+
 
 def open_signin():
     widget.setCurrentIndex(1)
@@ -60,10 +69,12 @@ def open_leaderboard():
     widget.setCurrentIndex(5)
     leaderboard.refresh()
 
+
 def open_achievements():
     print("navigation open achievements")
     widget.setCurrentIndex(6)
     achievements_page.refresh()
+
 
 def open_startgame():
     widget.setCurrentIndex(7)
@@ -85,10 +96,12 @@ def open_connect4(k):
     connect4.set_player(gui.player_global)
     connect4.game()
 
+
 def open_connect4_pp():
     global mode
     mode = 1
     open_connect4(1)
+
 
 if __name__ == '__main__':
     playlist = QMediaPlaylist()
@@ -97,10 +110,10 @@ if __name__ == '__main__':
     playlist.setPlaybackMode(QMediaPlaylist.Loop)
     player = QMediaPlayer()
     player.setPlaylist(playlist)
-    player.play()
+    # player.play()
     app = QApplication(sys.argv)
     landing = landing_page.LandingMain()
-    #start widget
+    # start widget
     widget = QtWidgets.QStackedWidget()
     w = start_page.StartMain()
     signin = signIn.SigninMain()
@@ -112,39 +125,39 @@ if __name__ == '__main__':
     startgame = start_game.StartGameMain()
     gamelevel = level_of_difficulty.StartLevelMain()
     connect4 = GUI.MainWindow()
-    #start page
+    # start page
     w.Window.signin_btn.clicked.connect(open_signin)
     w.Window.signup_btn.clicked.connect(open_signup)
-    # w.Window.guest_btn.clicked.connect(open_gamespace)
+    w.Window.guest_btn.clicked.connect(open_gamespace)
     w.Window.quit_btn.clicked.connect(sys.exit)
-    #sign in navigation btns
+    # sign in navigation btns
     signin.Window.next_button.clicked.connect(signin_to_gamespace)
     signin.Window.back_button.clicked.connect(open_startpage)
     # sign up navigation btns
     signup.Window.next_button.clicked.connect(signup_to_gamespace)
     signup.Window.back_button.clicked.connect(open_startpage)
-    #gamespace navigation btns
+    # gamespace navigation btns
     game.Window.profilebtn.clicked.connect(open_profile)
     game.Window.exitbtn.clicked.connect(open_startpage)
     game.Window.leaderboardbtn.clicked.connect(open_leaderboard)
     game.Window.connect4.clicked.connect(open_startgame)
-    #profile navigation btns
+    # profile navigation btns
     profile.Window.back_button.clicked.connect(open_gamespace)
     profile.Window.achievements_button.clicked.connect(open_achievements)
-    #leaderboard navigation
+    # leaderboard navigation
     leaderboard.Window.back_button.clicked.connect(open_gamespace)
-    #achievements page
+    # achievements page
     achievements_page.Window.back_btn.clicked.connect(open_profile)
-    #start game
+    # start game
     startgame.Window.pc_btn.clicked.connect(lambda: open_levelpage(0))
     startgame.Window.pp_btn.clicked.connect(open_connect4_pp)
     startgame.Window.quit_btn.clicked.connect(open_gamespace)
-    #game level
+    # game level
     gamelevel.Window.easy_btn.clicked.connect(lambda: open_connect4(1))
     gamelevel.Window.normal_btn.clicked.connect(lambda: open_connect4(3))
     gamelevel.Window.hard_btn.clicked.connect(lambda: open_connect4(6))
     gamelevel.Window.quit_btn.clicked.connect(open_startgame)
-    #connect4
+    # connect4
     connect4.quitbtn.clicked.connect(open_startgame)
 
     widget.addWidget(w)  # 0
@@ -161,7 +174,7 @@ if __name__ == '__main__':
     loop = QEventLoop()
     t = QElapsedTimer()
     for i in range(6):
-        landing.Window.progressBar.setValue(i*20)
+        landing.Window.progressBar.setValue(i * 20)
         QtTest.QTest.qWait(400)
 
     QTimer.singleShot(500, loop.quit)
@@ -169,8 +182,8 @@ if __name__ == '__main__':
 
     player.stop()
     del landing
-    widget.showFullScreen()
-    # widget.show()
-    widget.move(10,10)
+    # widget.showFullScreen()
+    widget.show()
+    widget.move(10, 10)
     # widget.update()
     sys.exit(app.exec_())

@@ -30,9 +30,13 @@ class ProfileWindow(QWidget):
         self.achievements_button = self.get_achievements_button()
         self.stats_label = self.get_stats_label()
         self.name_lineEdit = self.get_name_lineEdit()
+        self.old_pw_lineEdit = self.get_old_pw_lineEdit()
+        self.new_pw_lineEdit = self.get_new_pw_lineEdit()
         self.editname_button = self.get_editname_button()
         self.invalid_name_label = self.get_invalid_name_label()
         self.change_pw_button = self.get_change_pw_button()
+        self.old_pw_label = self.get_old_pw_label()
+        self.new_pw_label = self.get_new_pw_label()
         self.frame = self.get_frame()
         self.wins_label = self.get_wins_label()
         self.games_label = self.get_games_label()
@@ -102,10 +106,30 @@ class ProfileWindow(QWidget):
         label.setObjectName("username_label")
         return label
 
+    def get_old_pw_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(700, 340, 180, 40))
+        label.setFont(params.get_font(13))
+        label.setStyleSheet(params.profile_label_style)
+        label.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        label.setText("old password:")
+        label.setObjectName("old_pw_label")
+        return label
+
+    def get_new_pw_label(self):
+        label = QtWidgets.QLabel(self)
+        label.setGeometry(QtCore.QRect(1250, 340, 180, 40))
+        label.setFont(params.get_font(13))
+        label.setStyleSheet(params.profile_label_style)
+        label.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        label.setText("new password:")
+        label.setObjectName("new_pw_label")
+        return label
+
     def get_change_pic_button(self):
         button = QtWidgets.QPushButton(self)
         button.setGeometry(QtCore.QRect(70, 510, 291, 41))
-        button.setFont(params.get_font(11, 62, True))
+        button.setFont(params.get_font(13, 40, True))
         button.setStyleSheet(params.profile_change_pic_style)
         button.setAutoDefault(False)
         button.setDefault(False)
@@ -155,10 +179,34 @@ class ProfileWindow(QWidget):
         lineEdit.setDisabled(True)
         return lineEdit
 
+    def get_old_pw_lineEdit(self):
+        lineEdit = QtWidgets.QLineEdit(self)
+        lineEdit.setGeometry(QtCore.QRect(900, 340, 300, 45))
+        lineEdit.setFont(params.get_font(20, 50))
+        lineEdit.setStyleSheet(params.profile_name_lineEdit_enabled)
+        lineEdit.setInputMask("")
+        lineEdit.setAlignment(QtCore.Qt.AlignCenter)
+        lineEdit.setObjectName("old_pw_lineEdit")
+        lineEdit.setText("")
+        lineEdit.setEnabled(True)
+        return lineEdit
+
+    def get_new_pw_lineEdit(self):
+        lineEdit = QtWidgets.QLineEdit(self)
+        lineEdit.setGeometry(QtCore.QRect(1450, 340, 300, 45))
+        lineEdit.setFont(params.get_font(20, 50))
+        lineEdit.setStyleSheet(params.profile_name_lineEdit_enabled)
+        lineEdit.setInputMask("")
+        lineEdit.setAlignment(QtCore.Qt.AlignCenter)
+        lineEdit.setObjectName("new_pw_lineEdit")
+        lineEdit.setText("")
+        lineEdit.setEnabled(True)
+        return lineEdit
+
     def get_editname_button(self):
         button = QtWidgets.QPushButton(self)
         button.setGeometry(QtCore.QRect(1130, 250, 71, 41))
-        button.setFont(params.get_font(11, 62, True, False))
+        button.setFont(params.get_font(13, 62, True, False))
         button.setStyleSheet(params.profile_button_style)
         button.setObjectName("editname_pushButton")
         button.setText("Edit")
@@ -178,10 +226,12 @@ class ProfileWindow(QWidget):
 
     def get_change_pw_button(self):
         button = QtWidgets.QPushButton(self)
-        button.setGeometry(QtCore.QRect(560, 340, 191, 41))
+        button.setGeometry(QtCore.QRect(445, 340, 230, 50))
         button.setStyleSheet(params.profile_button_style)
         button.setObjectName("change_pw_pushButton")
         button.setText("Change password")
+        button.setFont(params.get_font(13))
+        button.clicked.connect(self.toggle_change_pw)
         return button
 
     def get_frame(self):
@@ -320,15 +370,16 @@ class ProfileWindow(QWidget):
 
     def save_name(self):
         self.invalid_name_label.setVisible(False)
-        self.editname_button.setText("Edit")
         print(self.name_lineEdit.text())
         f = Facade.get_instance()
         # gui.player_global.set_name(self.name_lineEdit.text())
-        if not f.save_name(self.name_lineEdit.text()):
-            self.invalid_name_label.setVisible(True)
-        else:
+        if f.save_name(self.name_lineEdit.text()):
+            self.editname_button.setText("Edit")
             self.name_lineEdit.setStyleSheet(params.profile_name_lineEdit_disabled)
             self.name_lineEdit.setDisabled(True)
+        else:
+            self.invalid_name_label.setVisible(True)
+
 
     def enable_name(self):
         print("edit name")
@@ -342,6 +393,31 @@ class ProfileWindow(QWidget):
             self.save_name()
         else:  # button is disabled and we need to make changes
             self.enable_name()
+
+    def save_pw(self):
+        f = Facade.get_instance()
+        old, new = self.old_pw_lineEdit.text(), self.new_pw_lineEdit.text()
+        if f.save_password(old, new):
+            self.change_pw_button.setText("Change password")
+            self.old_pw_lineEdit.setVisible(False)
+            self.new_pw_lineEdit.setVisible(False)
+            self.old_pw_label.setVisible(False)
+            self.new_pw_label.setVisible(False)
+        else:
+            pass
+
+    def enable_change_pw(self):
+        self.change_pw_button.setText("Save password")
+        self.old_pw_lineEdit.setVisible(True)
+        self.new_pw_lineEdit.setVisible(True)
+        self.old_pw_label.setVisible(True)
+        self.new_pw_label.setVisible(True)
+
+    def toggle_change_pw(self):
+        if self.old_pw_lineEdit.isVisible() or self.new_pw_lineEdit.isVisible():
+            self.save_pw()
+        else:
+            self.enable_change_pw()
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Return:
@@ -409,3 +485,7 @@ class ProfileMain(QMainWindow):
         pixmap = QPixmap(gui.player_global.get_avatar())
         self.Window.profile_pic.setPixmap(QPixmap(pixmap))
         self.Window.profile_pic.setScaledContents(True)
+        self.Window.old_pw_lineEdit.setVisible(False)
+        self.Window.new_pw_lineEdit.setVisible(False)
+        self.Window.old_pw_label.setVisible(False)
+        self.Window.new_pw_label.setVisible(False)

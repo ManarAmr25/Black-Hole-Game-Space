@@ -220,7 +220,6 @@ profile_name_lineEdit_enabled = "    color: rgb(255, 255, 255);\n" \
 
 profile_button_style = "QPushButton{\n" \
                        "    color:rgb(248, 255, 105);\n" \
-                       "    font: 11pt \"OCR A Extended\";\n" \
                        "    border-radius: 1px;\n" \
                        "    border-bottom: 4px solid rgba(152, 186, 231,0);\n" \
                        "    font-weight: 500;\n" \
@@ -229,7 +228,6 @@ profile_button_style = "QPushButton{\n" \
                        "    color: rgb(9, 6, 75);\n" \
                        "    background-color: rgba(152, 186, 231,0.7);\n" \
                        "    border-bottom: 4px solid rgb(152, 186, 231);\n" \
-                       "    font: 11pt \"OCR A Extended\";\n" \
                        "    box-sizing: border-box;\n" \
                        "    font-weight: 500;\n" \
                        "}"

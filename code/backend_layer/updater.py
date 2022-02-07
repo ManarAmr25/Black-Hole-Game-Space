@@ -44,13 +44,12 @@ class Updater:
             return False
 
     def save_password(self, player, old_password, new_password):
-        password, salt = self.__db.get_password()
+        password, salt = self.__db.get_password(player.get_name())
         if len(password) == 0 or len(salt) == 0:
             return False, None
-        if password != hash_password(salt, old_password):
+        if password != hash_password(bytes.fromhex(salt), old_password).hex():
             return False, "Wrong password"  # wrong password
         if len(new_password) < 8:
             return False, "Invalid password"
-
-        return self.__db.update_password(player.get_name(), password, hash_password(salt, new_password)), None
+        return self.__db.update_password(player.get_name(), password, hash_password(bytes.fromhex(salt), new_password).hex()), None
 

@@ -115,7 +115,6 @@ class GamespaceWindow(QWidget):
         self.nameg.setText("Connect 4")
         return connect4btn
 
-
     def init_exitbtn(self):
         exitbtn = QtWidgets.QPushButton(self.centralwidget)
         exitbtn.setGeometry(QtCore.QRect(1780, 20, 71, 51))
@@ -207,4 +206,8 @@ class GamespaceMain(QMainWindow):
         self.Window.avatarlbl.setScaledContents(True)
         self.Window.levelprogress.setProperty("value", gui.player_global.get_level_progress())
         self.Window.levelprogress.setTextVisible(True)
+        if type(gui.player_global).__name__ == 'Guest':
+            self.Window.profilebtn.setVisible(False)
+        else:
+            self.Window.profilebtn.setVisible(True)
         print("refresh done")

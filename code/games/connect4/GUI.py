@@ -320,34 +320,38 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.start = False
                 color = ["green", "rgb(255, 204, 92)"]
                 self.winnerlbl.show()
+                is_win = 0
+                gained = 0
                 if self.scores[0] == self.scores[1]:
                     self.winnerlbl.setText("TIE")
+                    if self.mode == 0:
+                        gained = 5
                 else:
                     if self.mode == 0:  # player vs computer
-                        self.player.increment_games()
+                        # self.player.increment_games()
                         gained = 5 + max((self.scores[1] - self.scores[0])*2, 0)
                         print("in connect 4", self.scores, gained)
-                        self.player.increase_xp(gained)
-                        self.player.increase_weekly_xp(gained)
+                        # self.player.increase_xp(gained)
+                        # self.player.increase_weekly_xp(gained)
                     if self.scores[0] < self.scores[1]:
                         self.winnerlbl.setText("PLAYER 2 WINS !")
                         color[1] = "rgb(255, 111, 105)"
                         if self.mode == 0:
-                            self.player.increment_wins()
+                            # self.player.increment_wins()
+                            is_win = 1
                     for i in range(10):
                         self.winnerlbl.setStyleSheet(
                             f"color: {color[i % 2]}; background-color: rgba(88, 140, 126,0.3);")
                         self.upd()
                         self.repaint()
                         QtTest.QTest.qWait(200)
-                self.player.update_achievements("game")
-                self.player.update_achievements("xp")
-                self.player.update_achievements("wins")
-                self.player.update_achievements("level")
+
+                print("game report : ", is_win, gained)
+                self.player.report_game(is_win, gained)
                 # TODO : daily challenges
 
             elif self.turn == 0:  # computer's turn
-                if self.mode ==0 :
+                if self.mode ==0:
                     self.computer_play()
                 else:
                     self.human_play()
