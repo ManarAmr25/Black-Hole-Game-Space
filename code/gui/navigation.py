@@ -14,10 +14,11 @@ from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
 
 import gui
 from backend_layer.facade import Facade
-from games.connect4 import start_game, level_of_difficulty, GUI
-from models.guest import Guest
+from backend_layer.models.guest import Guest
+from gui.games.connect4 import level_of_difficulty
+from gui.games.connect4 import GUI, start_game
 from gui import tournament_setup, tournament_page
-from games.trivia import trivia_gui
+from gui.games.trivia import trivia_gui
 
 mode = 1
 difficult = 3
@@ -181,7 +182,7 @@ if __name__ == '__main__':
     playlist.setPlaybackMode(QMediaPlaylist.Loop)
     player = QMediaPlayer()
     player.setPlaylist(playlist)
-    # player.play()
+    player.play()
     app = QApplication(sys.argv)
     landing = landing_page.LandingMain()
     # start widget
@@ -270,8 +271,8 @@ if __name__ == '__main__':
 
     player.stop()
     del landing
-    # widget.showFullScreen()
-    widget.show()
-    widget.move(10, 10)
+    widget.showFullScreen()
+    # widget.show()
+   # widget.move(10, 10)
     # widget.update()
     sys.exit(app.exec_())

@@ -132,7 +132,7 @@ class GamespaceWindow(QWidget):
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("../storage/Icons/trivia.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         triviabtn.setIcon(icon1)
-        triviabtn.setIconSize(QtCore.QSize(400, 250))
+        triviabtn.setIconSize(QtCore.QSize(300, 500))
         triviabtn.setObjectName("triviabtn")
         triviabtn.setText(" ")
         triviabtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -173,6 +173,9 @@ class GamespaceWindow(QWidget):
                                      "color:white;}\n"
                                      "QPushButton:hover {\n"
                                      "    background-color: #e87c35;\n"
+                                     "}"
+                                     "QPushButton:focus {\n"
+                                     "     outline: none;box-shadow: none;\n"
                                      "}")
         leaderboardbtn.setObjectName("leaderboardbtn")
         leaderboardbtn.setText("leaderboard")

@@ -1,13 +1,12 @@
 import os
 import shutil
 
-from auth_proxy.sign_up import SignUp
-from auth_proxy.sign_in import SignIn
-from backend_layer.getter import Getter
-from backend_layer.tournament_manager import TournamentManager
-from models.guest import Guest
-from models.player import Player
-from backend_layer.updater import Updater
+from backend_layer.auth_proxy.sign_in import SignIn
+from backend_layer.auth_proxy.sign_up import SignUp
+from backend_layer.access_managers.getter import Getter
+from backend_layer.models.guest import Guest
+from backend_layer.access_managers.tournament_manager import TournamentManager
+from backend_layer.access_managers.updater import Updater
 
 
 class Facade:
@@ -39,7 +38,6 @@ class Facade:
 
     def signup_request(self, name, password, gender):
         check, player = self.signup.sign_up(name, password, gender)
-        print("sign up : ", check, player, name, password, gender)
         if check:
             self.player = player
         return check, player

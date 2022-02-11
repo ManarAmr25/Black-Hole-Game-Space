@@ -1,11 +1,6 @@
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtGui import QMovie, QPainter
-from PyQt5.QtWidgets import QMainWindow, QWidget
-import gui
-from models.player import Player
 from params import *
 import gui
-from models.guest import Guest
+from backend_layer.models.guest import Guest
 
 class StartWindow(QWidget):
     def init_signin_btn(self):

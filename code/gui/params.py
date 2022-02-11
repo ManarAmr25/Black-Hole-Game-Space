@@ -70,7 +70,9 @@ background_style = "background-image:url(:/newPrefix/f.jpg);\nbackground-repeat:
                    "contain, cover; "
 
 back_button_style = "QPushButton{\nbackground-color:rgba(152,186,231,0.7);\nborder-radius: " \
-                    "40px;\n}\nQPushButton:hover{\nbackground-color:#98BAE7;\n}\n "
+                    "40px;\n}\nQPushButton:hover{\nbackground-color:#98BAE7;\n}" \
+                    "QPushButton:focus {\n"\
+                    "outline: none;box-shadow: none;\n}"
 
 show_password_button_style = "background-color: transparent;\nbackground:none;\nborder: none;"
 

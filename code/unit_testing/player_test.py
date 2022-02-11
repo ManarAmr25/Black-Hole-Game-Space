@@ -1,6 +1,6 @@
 import unittest
-from models.player import Player
-from models.wins_achievement import WinsAchievement
+from backend_layer.models.player import Player
+from backend_layer.models.wins_achievement import WinsAchievement
 
 
 class MyTestCase(unittest.TestCase):

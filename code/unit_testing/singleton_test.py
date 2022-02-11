@@ -1,10 +1,10 @@
 import unittest
-from unittest import TestLoader
 
+from backend_layer.access_managers.tournament_manager import TournamentManager
 from backend_layer.facade import Facade
-from backend_layer.getter import Getter
-from backend_layer.updater import Updater
-from database.db_manager import DBManager
+from backend_layer.access_managers.getter import Getter
+from backend_layer.access_managers.updater import Updater
+from backend_layer.database.db_manager import DBManager
 
 correct_token = "6390ed339b8270b"
 wrong_token = "1390ed339b8270b"
@@ -98,29 +98,59 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(g1, g2)
 
         Getter.reset_instance()
-        
-    def test41_facade_second_init(self):
+
+    def test41_tournament_manager_second_init(self):
+        t = TournamentManager()  # first
+        with self.assertRaises(Exception):  # second initialization
+            t = TournamentManager()
+
+        TournamentManager.reset_instance()  # reset instance
+
+    def test42_tournament_manager_same_instance(self):
+        t1 = TournamentManager.get_instance()
+        t2 = TournamentManager.get_instance()
+        self.assertEqual(t1, t2)  # same instance
+
+        TournamentManager.reset_instance()  # reset instance
+
+    def test43_tournament_manager_same_instance2(self):
+        t1 = TournamentManager()
+        t2 = TournamentManager.get_instance()
+        self.assertEqual(t1, t2)  # same instance
+
+        TournamentManager.reset_instance()  # reset instance
+
+    def test44_tournament_manger_init_after_get_instance(self):
+        t1 = TournamentManager.get_instance()
+        with self.assertRaises(Exception):  # correct token second initialization
+            t2 = TournamentManager()
+        t2 = TournamentManager.get_instance()
+        self.assertEqual(t1, t2)
+
+        TournamentManager.reset_instance()
+
+    def test51_facade_second_init(self):
         f = Facade()  # first
         with self.assertRaises(Exception):  # second initialization
             f = Facade()
 
         Facade.reset_instance()  # reset instance
 
-    def test42_facade_same_instance(self):
+    def test52_facade_same_instance(self):
         f1 = Facade.get_instance()
         f2 = Facade.get_instance()
         self.assertEqual(f1, f2)  # same instance
 
         Facade.reset_instance()  # reset instance
 
-    def test43_facade_same_instance2(self):
+    def test53_facade_same_instance2(self):
         f1 = Facade()
         f2 = Facade.get_instance()
         self.assertEqual(f1, f2)  # same instance
 
         Facade.reset_instance()  # reset instance
 
-    def test44_facade_init_after_get_instance(self):
+    def test54_facade_init_after_get_instance(self):
         f1 = Facade.get_instance()
         with self.assertRaises(Exception):  # correct token second initialization
             f2 = Facade()

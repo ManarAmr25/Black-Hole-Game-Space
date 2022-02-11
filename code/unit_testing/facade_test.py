@@ -39,7 +39,7 @@ class MyTestCase(unittest.TestCase):
     def test_signin(self):
         f = Facade.get_instance()
         f.signup_request("nour walid2", "password", True)
-        check, response = f.signin_request('nour walid2','password')
+        check, response = f.signin_request('nour walid2', 'password')
         self.assertTrue(check)
         self.assertEqual(response.get_name(),'nour walid2')
         f.reset_instance()
@@ -52,7 +52,7 @@ class MyTestCase(unittest.TestCase):
         test = f.save_name('new player2')
         print(test)
         self.assertFalse(test)
-        self.assertEqual(response.get_name(),'new player')
+        self.assertEqual(response.get_name(), 'new player')
         f.reset_instance()
 
 

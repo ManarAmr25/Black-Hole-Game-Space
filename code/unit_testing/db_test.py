@@ -1,8 +1,8 @@
 import unittest
 
-from database.db_manager import DBManager
-from models.player import Player
-from models.xp_achievement import XpAchievement
+from backend_layer.database.db_manager import DBManager
+from backend_layer.models.player import Player
+from backend_layer.models.xp_achievement import XpAchievement
 
 correct_token = "6390ed339b8270b"
 wrong_token = "1390ed339b8270b"

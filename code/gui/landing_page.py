@@ -1,7 +1,3 @@
-from PyQt5 import QtCore
-from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QMovie, QPainter
-from PyQt5.QtWidgets import QMainWindow, QWidget, QProgressBar, QLabel
 from params import *
 from backend_layer.facade import Facade
 

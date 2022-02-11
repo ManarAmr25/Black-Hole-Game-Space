@@ -1,7 +1,7 @@
 import unittest
 
-from auth_proxy.sign_in import SignIn
-from auth_proxy.sign_up import SignUp
+from backend_layer.auth_proxy.sign_in import SignIn
+from backend_layer.auth_proxy.sign_up import SignUp
 
 
 class MyTestCase(unittest.TestCase):

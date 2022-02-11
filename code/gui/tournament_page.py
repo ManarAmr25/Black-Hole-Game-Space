@@ -1,15 +1,12 @@
 import sys
-from operator import itemgetter
 
 from PyQt5 import QtCore, QtWidgets, QtTest
 from PyQt5 import QtGui
-from PyQt5.QtCore import QPropertyAnimation
-from PyQt5.QtGui import QMovie, QPainter, QColor
+from PyQt5.QtGui import QMovie, QPainter
 from PyQt5.QtWidgets import QMainWindow, QWidget, QGraphicsDropShadowEffect, QApplication, QAbstractItemView
 
 import params
 from backend_layer.facade import Facade
-from models.guest import Guest
 
 
 class TournamentWindow(QWidget):
