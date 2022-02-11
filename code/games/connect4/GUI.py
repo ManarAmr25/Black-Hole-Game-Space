@@ -28,7 +28,8 @@ screen = pygame.Surface((width, height))
 
 
 class ImageWidget(QWidget, QtCore.QObject):
-    global screen , board
+    global screen, board
+
     def __init__(self, surface, parent=None):
         super(ImageWidget, self).__init__(parent)
         self.w = surface.get_width()
@@ -63,6 +64,7 @@ class ImageWidget(QWidget, QtCore.QObject):
 
 class MainWindow(QtWidgets.QMainWindow):
     global screen, board
+
     def init_score_table(self):
         score_table = QtWidgets.QTableWidget(self.centralWidget())
         score_table.setGeometry(QtCore.QRect(1380, 220, 500, 200))
@@ -109,6 +111,7 @@ class MainWindow(QtWidgets.QMainWindow):
         item.setTextAlignment(QtCore.Qt.AlignCenter)
         item.setText(str(s2))
         self.scores_table.setItem(0, 1, item)
+        self.scores_table.setHorizontalHeaderLabels([self.player0.get_name(), self.player1.get_name()])
 
     def get_label(self, background, offset):
         circlelbl = QtWidgets.QLabel(self.centralWidget())
@@ -150,14 +153,15 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         global screen
         for r in range(ROWS):
-            for j in range(7,17):
+            for j in range(7, 17):
                 pygame.draw.rect(screen, COLOR[0], (j * SQUARESIZE, (r + 1) * SQUARESIZE, SQUARESIZE, SQUARESIZE))
 
         super(MainWindow, self).__init__(parent)
         # game variables
         self.K = 3
         self.mode = 0
-        self.player = None
+        self.player0 = None
+        self.player1 = None
         self.setFixedWidth(width)
         self.setFixedHeight(height)
         self.surface = screen
@@ -165,8 +169,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.img)
         self.centralWidget().setGeometry(QtCore.QRect(20, 20, 1000, 1000))
         self.scores_table = self.init_score_table()
-        self.player1_color = self.get_label("rgb(255, 204, 92)", 0)
-        self.player2_color = self.get_label("rgb(255, 111, 105)", 250)
+        self.player0_color = self.get_label("rgb(255, 204, 92)", 0)
+        self.player1_color = self.get_label("rgb(255, 111, 105)", 250)
         self.start = True
         # creating label to show the seconds
         self.timelbl = QLabel("00:00", self.centralWidget())
@@ -211,8 +215,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.winnerlbl = self.get_winnerlbl()
         self.quitbtn = self.init_quitbtn()
 
-    def set_player(self, player):
-        self.player = player
+    def set_player(self, player0, player1):
+        print("set_players in connect4 GUI")
+        self.player0 = player0
+        self.player1 = player1
+        print(self.player0.get_name())
+        print(self.player1.get_name())
 
     def showTime(self):
         # checking if flag is true
@@ -281,15 +289,15 @@ class MainWindow(QtWidgets.QMainWindow):
         # check +ve diagonals
         for r in range(ROWS - 3):
             for c in range(COLUMNS - 3):
-                if board[r][c] == turn and board[r][c] == board[r + 1][c + 1] and board[r + 1][c + 1] == board[r + 2][
-                    c + 2] and board[r + 2][c + 2] == board[r + 3][c + 3]:
+                if board[r][c] == turn and board[r][c] == board[r + 1][c + 1] \
+                        and board[r + 1][c + 1] == board[r + 2][c + 2] and board[r + 2][c + 2] == board[r + 3][c + 3]:
                     score += 1
 
         # check -ve diagonals
         for r in range(3, ROWS):
             for c in range(COLUMNS - 3):
-                if board[r][c] == turn and board[r][c] == board[r - 1][c + 1] and board[r - 1][c + 1] == board[r - 2][
-                    c + 2] and board[r - 2][c + 2] == board[r - 3][c + 3]:
+                if board[r][c] == turn and board[r][c] == board[r - 1][c + 1] \
+                        and board[r - 1][c + 1] == board[r - 2][c + 2] and board[r - 2][c + 2] == board[r - 3][c + 3]:
                     score += 1
 
         return score
@@ -301,15 +309,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.count = 0
         self.start = True
         self.winnerlbl.setStyleSheet("color: black; background-color: rgba(88, 140, 126,0.3)")
-        self.winnerlbl.setText("PLAYER 1 WINS !")
+        self.winnerlbl.setText(f"{self.player0.get_name()} WINS !")
         self.winnerlbl.hide()
         print(self.mode)
         board = np.zeros((ROWS, COLUMNS), dtype=int)
         # put_piece(board, last_in_row, 3, 1)
         self.draw_board(board)
-        self.upd()
         game_over = False
         self.scores = [0, 0]  # scores[0] > computer, scores[1] > human
+        self.setScores(self.scores[0], self.scores[1])
+        self.upd()
         # keep track of last row in each col
         self.last_in_row = np.zeros(COLUMNS, dtype=int)
         self.turn = 0  # computer always goes first
@@ -320,38 +329,33 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.start = False
                 color = ["green", "rgb(255, 204, 92)"]
                 self.winnerlbl.show()
-                is_win = 0
-                gained = 0
-                if self.scores[0] == self.scores[1]:
-                    self.winnerlbl.setText("TIE")
-                    if self.mode == 0:
-                        gained = 5
-                else:
-                    if self.mode == 0:  # player vs computer
-                        # self.player.increment_games()
-                        gained = 5 + max((self.scores[1] - self.scores[0])*2, 0)
-                        print("in connect 4", self.scores, gained)
-                        # self.player.increase_xp(gained)
-                        # self.player.increase_weekly_xp(gained)
-                    if self.scores[0] < self.scores[1]:
-                        self.winnerlbl.setText("PLAYER 2 WINS !")
-                        color[1] = "rgb(255, 111, 105)"
-                        if self.mode == 0:
-                            # self.player.increment_wins()
-                            is_win = 1
-                    for i in range(10):
-                        self.winnerlbl.setStyleSheet(
-                            f"color: {color[i % 2]}; background-color: rgba(88, 140, 126,0.3);")
-                        self.upd()
-                        self.repaint()
-                        QtTest.QTest.qWait(200)
+                is_win0, is_win1 = 0, 0
+                gained0 = 5 + max((self.scores[0] - self.scores[1]) * 2, 0)
+                gained1 = 5 + max((self.scores[1] - self.scores[0]) * 2, 0)
 
-                print("game report : ", is_win, gained)
-                self.player.report_game(is_win, gained)
-                # TODO : daily challenges
+                if self.scores[0] == self.scores[1]:  # TIE, both lose and both get 5 xp
+                    self.winnerlbl.setText("TIE")
+                elif self.scores[0] > self.scores[1]:  # player1 wins (computer in mode 0)
+                    is_win0 = 1
+                else:  # player 2 wins
+                    self.winnerlbl.setText(f"{self.player1.get_name()} WINS !")
+                    color[1] = "rgb(255, 111, 105)"
+                    is_win1 = 1
+
+                print("game report 0: ", is_win0, gained0, self.player0.get_name(), self.scores[0])
+                print("game report 1: ", is_win1, gained1, self.player1.get_name(), self.scores[1])
+                self.player0.report_game(is_win0, gained0)
+                self.player1.report_game(is_win1, gained1)
+
+                for i in range(50):
+                    self.winnerlbl.setStyleSheet(
+                        f"color: {color[i % 2]}; background-color: rgba(88, 140, 126,0.3);")
+                    self.upd()
+                    self.repaint()
+                    QtTest.QTest.qWait(200)
 
             elif self.turn == 0:  # computer's turn
-                if self.mode ==0:
+                if self.mode == 0:
                     self.computer_play()
                 else:
                     self.human_play()
@@ -369,6 +373,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.turn = (self.turn + 1) % 2
         self.img.setMouseTracking(True)
         self.img.loop = True
+
     def human_play(self):
         self.img.loop = True
         while self.img.loop:
@@ -398,6 +403,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.turn = (self.turn + 1) % 2
         else:
             self.img.loop = True
+
 
 '''
 if __name__ == '__main__':

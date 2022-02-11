@@ -3,7 +3,7 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QMovie, QPainter
 from PyQt5.QtWidgets import QMainWindow, QWidget, QProgressBar, QLabel
 from params import *
-
+from backend_layer.facade import Facade
 
 class LandingWindow(QWidget):
 
@@ -17,12 +17,16 @@ class LandingWindow(QWidget):
         return progressbar
 
     def init_quote_lb(self):
+        f = Facade.get_instance()
         lb = QLabel(self)
+        lb.setGeometry(QtCore.QRect(160, 900, 400, 80))
         # TODO get random quote
-        lb.setText('Hello User :)')
+        #lb.setText("this the quot this this the quot this the quot this the quot")
+        lb.setText(f.get_quote()[0])
         lb.setStyleSheet(quote_sheet)
+        lb.setWordWrap(True)
+        #lb.setScaledContents(True)
         lb.setAlignment(QtCore.Qt.AlignCenter)
-        lb.setGeometry(QtCore.QRect(230, 900, 261, 30))
         lb.setFont(font_landing)
         return lb
 

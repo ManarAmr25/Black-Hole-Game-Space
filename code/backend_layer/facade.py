@@ -4,6 +4,7 @@ import shutil
 from auth_proxy.sign_up import SignUp
 from auth_proxy.sign_in import SignIn
 from backend_layer.getter import Getter
+from backend_layer.tournament_manager import TournamentManager
 from models.guest import Guest
 from models.player import Player
 from backend_layer.updater import Updater
@@ -21,6 +22,7 @@ class Facade:
             self.signin = SignIn()
             self.updater = Updater.get_instance()
             self.getter = Getter.get_instance()
+            self.tournament_manager = TournamentManager.get_instance()
             Facade.__instance = self
 
     @staticmethod
@@ -93,3 +95,21 @@ class Facade:
 
     def reset_player(self):
         self.player = Guest()
+
+    def create_tournament(self, game, names):
+        return self.tournament_manager.build_tournament(game, names)
+
+    def get_tournament_players(self):
+        return self.tournament_manager.get_tournament_players()
+
+    def get_game(self):
+        return self.tournament_manager.get_game()
+
+    def get_next_match(self):
+        return self.tournament_manager.next_match()
+
+    def get_current_match(self):
+        return self.tournament_manager.get_current_match()
+
+    def get_winner(self):
+        return self.tournament_manager.get_winner()

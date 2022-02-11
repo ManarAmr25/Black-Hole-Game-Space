@@ -279,4 +279,6 @@ class SignupMain(QMainWindow):
     def refresh(self):
         self.Window.userNameTxtBox.setText("")
         self.Window.passwordTxtBox.setText("")
+        self.Window.femaleRdBtn.setChecked(False)
+        self.Window.maleRdBtn.setChecked(False)
 

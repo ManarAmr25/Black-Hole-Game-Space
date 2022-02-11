@@ -1,5 +1,6 @@
 from PyQt5.QtGui import QPixmap
 import gui
+from gui import params
 from gui.params import *
 
 
@@ -115,28 +116,54 @@ class GamespaceWindow(QWidget):
         self.nameg.setText("Connect 4")
         return connect4btn
 
-    def init_exitbtn(self):
-        exitbtn = QtWidgets.QPushButton(self.centralwidget)
-        exitbtn.setGeometry(QtCore.QRect(1780, 20, 71, 51))
+    def init_triviabtn(self):
+        triviabtn = QtWidgets.QPushButton(self.centralwidget)
+        triviabtn.setGeometry(QtCore.QRect(500, 450, 400, 300))
         font = QtGui.QFont()
         font.setPointSize(13)
-        exitbtn.setFont(font)
-        exitbtn.setStyleSheet("QPushButton{\n"
-                              "background-color:rgba(245, 98, 3,0.9);\n"
-                              "border-radius:25px;\n"
-                              "color:white;}\n"
-                              "QPushButton:hover {\n"
-                              "    background-color: #e87c35;\n"
-                              "}")
+        triviabtn.setFont(font)
+        triviabtn.setStyleSheet("QPushButton{\n"
+                                 "background-color:#98BAE7;\n"
+                                 "border-radius:5px;\n"
+                                 "font-color:white;}\n"
+                                 "QPushButton:hover {\n"
+                                 "    background-color: #F14A16;\n"
+                                 "}" )
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap("../storage/Icons/trivia.jpeg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        triviabtn.setIcon(icon1)
+        triviabtn.setIconSize(QtCore.QSize(400, 250))
+        triviabtn.setObjectName("triviabtn")
+        triviabtn.setText(" ")
+        triviabtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.nameg = QtWidgets.QLabel(self.centralwidget)
+        self.nameg.setGeometry(QtCore.QRect(650, 770, 145, 31))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.nameg.setFont(font)
+        self.nameg.setStyleSheet("color:white;")
+        self.nameg.setObjectName("namelbl")
+        self.nameg.setText("Trivia")
+        return triviabtn
+
+    def init_exitbtn(self):
+        exitbtn = QtWidgets.QPushButton(self.centralwidget)
+        exitbtn.setGeometry(QtCore.QRect(50, 900, 80, 80))
+        exitbtn.setText("")
+        exitbtn.setStyleSheet(params.back_button_style)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("../storage/Icons/back.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        exitbtn.setIcon(icon)
+        exitbtn.setIconSize(QtCore.QSize(50, 50))
+        exitbtn.setAutoDefault(False)
+        exitbtn.setFlat(False)
         exitbtn.setObjectName("exitbtn")
-        exitbtn.setText("Exit")
         exitbtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         return exitbtn
 
-    # TODO : temporary
     def init_leaderboardbtn(self):
         leaderboardbtn = QtWidgets.QPushButton(self.centralwidget)
-        leaderboardbtn.setGeometry(QtCore.QRect(1600, 20, 150, 51))
+        leaderboardbtn.setGeometry(QtCore.QRect(1600, 130, 150, 51))
         font = QtGui.QFont()
         font.setPointSize(13)
         leaderboardbtn.setFont(font)
@@ -152,6 +179,24 @@ class GamespaceWindow(QWidget):
         leaderboardbtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         return leaderboardbtn
 
+    def init_tournamentbtn(self):
+        tournamentbtn = QtWidgets.QPushButton(self.centralwidget)
+        tournamentbtn.setGeometry(QtCore.QRect(1400, 130, 150, 51))
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        tournamentbtn.setFont(font)
+        tournamentbtn.setStyleSheet("QPushButton{\n"
+                                     "background-color:rgba(245, 98, 3,0.9);\n"
+                                     "border-radius:25px;\n"
+                                     "color:white;}\n"
+                                     "QPushButton:hover {\n"
+                                     "    background-color: #e87c35;\n"
+                                     "}")
+        tournamentbtn.setObjectName("tournamentbtn")
+        tournamentbtn.setText("tournament")
+        tournamentbtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        return tournamentbtn
+
     def __init__(self, parent=None):
         super(GamespaceWindow, self).__init__(parent)
         self.setObjectName("MainWindow")
@@ -166,8 +211,10 @@ class GamespaceWindow(QWidget):
         self.profilebtn = self.init_profilebtn()
         self.exitbtn = self.init_exitbtn()
         self.leaderboardbtn = self.init_leaderboardbtn()
+        self.tournamentbtn = self.init_tournamentbtn()
         self.gamelbl = self.init_gamelbl()
         self.connect4 = self.init_connect4btn()
+        self.trivia = self.init_triviabtn()
         self.retranslateUi(self)
         QtCore.QMetaObject.connectSlotsByName(self)
 
@@ -208,6 +255,8 @@ class GamespaceMain(QMainWindow):
         self.Window.levelprogress.setTextVisible(True)
         if type(gui.player_global).__name__ == 'Guest':
             self.Window.profilebtn.setVisible(False)
+            self.Window.tournamentbtn.setVisible(False)
         else:
             self.Window.profilebtn.setVisible(True)
+            self.Window.tournamentbtn.setVisible(True)
         print("refresh done")

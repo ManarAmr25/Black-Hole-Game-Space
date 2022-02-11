@@ -51,6 +51,16 @@ class Guest:
         is_successful = is_successful and guest.set_level_xp(lvl, xp)
         return guest if is_successful else None
 
+    def set_name(self, name):
+        """
+            Sets Guest's name, default = "Guest"
+        """
+        if isinstance(name, str) and len(name) > 0:
+            self._name = name
+            return True
+        else:
+            return False
+
     def set_level_xp(self, level, xp):  # level and xp have to be set together
         """
         Sets Player's level and xp, default level = 1, default xp = 0.
@@ -103,3 +113,7 @@ class Guest:
 
     def report_game(self, is_win=0, gained_xp=0):
         self.increase_xp(gained_xp)
+
+    def reset(self):
+        self._lvl = 1
+        self._xp = 0

@@ -256,7 +256,18 @@ leaderboard_tabel_style = "QTableWidget {background-color:transparent; font: 15p
             "QTableView::item {border-bottom: 1px solid #ffffff; color: #ffffff; text-align: center;}"\
             "QTableView::item::hover{background-color:#BFA2DB; color:blue;}"
 
+tournament_tabel_style = "QTableWidget {background-color:transparent; font: 15pt \"OCR A Extended\"; border: none;}"\
+            "QHeaderView {border:none; background-color:transparent; font: 25pt \"OCR A Extended\";}"\
+            "QHeaderView::focus {border:none}"\
+            "QHeaderView::section {background-color:transparent; border-bottom: 1px solid #ffffff; color: #ffffff}"\
+            "QHeaderView::section::horizontal {background-color:rgba(127, 124, 130, 0.5);}"\
+            "QTableCornerButton::section {background-color:rgba(127, 124, 130, 0.5);}"\
+            "QTableView::item {border-bottom: 1px solid #ffffff; text-align: center;}"\
+
+
 leaderboard_frame_style = "background-color: rgba(110, 60, 188,0.4);  box-shadow: 20px 20px white; border-radius: 5px"
+tournament_frame_style = "background-color: rgba(86, 127, 199,0.7);  box-shadow: 20px 20px white; border-radius: 5px"
+tournament_player_label_style = "background-color: rgba(255, 255, 255, 0.5); border: 3px solid rgba(86, 127, 199,0.7); border-radius: 20px"
 #6E3CBC
 #d98adb
 
